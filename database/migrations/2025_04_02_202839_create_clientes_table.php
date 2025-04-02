@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id(); //PRIMARY KEY AUTO_INCREMENT
             $table->string('nome', 100); //VARCHAR(100)
+            $table->integer('cpf');
+            $table->string('endereco', 100);
+            $table->integer('celular');
             $table->string('email')->unique();
-            $table->string('tefone')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clientes');
+        Schema::table('clientes', function (Blueprint $table) {
+            Schema::dropIfExists('clientes');
+        });
     }
 };
