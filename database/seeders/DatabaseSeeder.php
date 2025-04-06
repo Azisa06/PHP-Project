@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(CategoriaSeeder::class);
         $this->call(CategoriaOrcamentoSeeder::class);
-
+        $this->call(CategoriaFuncionarioSeeder::class);
     }
 }
