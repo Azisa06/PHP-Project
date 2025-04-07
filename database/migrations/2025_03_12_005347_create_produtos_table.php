@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('preco', 10, 2);
             $table->integer('estoque')->default(0);
             $table->unsignedBigInteger('categoria_id');
-            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('restrict');
+            $table->foreign('categoria_id')->references('id')->on('categoria_produtos')->onDelete('restrict');
             $table->timestamps();
         });
     }

@@ -13,7 +13,10 @@ class CategoriaServicoSeeder extends Seeder
      */
     public function run(): void
     {
-        CategoriaServico::create(["nome" => 'Categoria3']);
-        CategoriaServico::create(["nome" => 'Categoria4']);
+        CategoriaServico::create(["nome" => 'Conserto de Microondas']);
+        CategoriaServico::create(["nome" => 'Conserto de TVs']);
+        CategoriaServico::create(["nome" => 'Consertos gerais']);
+        CategoriaServico::create(["nome" => 'Serviços Técnicos']);
+        CategoriaServico::create(["nome" => 'Manutenção']);
     }
 }

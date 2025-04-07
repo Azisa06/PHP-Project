@@ -24,7 +24,6 @@
     @endif
     
     <h2>Registro de Clientes</h2>
-        <!--<a href="#" class="btn btn-success mb-3">Novo Registro</a> não sei o que este botão faz-->
         <table class="table table-hover table-striped">
             <thead>
                 <tr>

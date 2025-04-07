@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Novo Produto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!--<link rel="stylesheet" href="{{ asset('css/app.css') }}"> arrumar a mensagem de sucesso depois-->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   </head>
   <body class="container">
     <h1>Novo Produto</h1>
@@ -44,10 +44,10 @@
             </select>
         </div>
     
-    <button type="submit" class="btn btn-primary">Enviar</button>
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
     @if (session('sucesso'))
         <div class="alert alert-success">
-            <p class="mensagem-sucesso">{{ session('successo') }} Produto adicionado com sucesso!</p>
+            <p class="mensagem-sucesso">{{ session('sucesso') }}</p>
         </div>
     @endif
 </form>

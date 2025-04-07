@@ -41,7 +41,7 @@
     <button type="submit" class="btn btn-primary">Cadastrar</button>
     @if (session('sucesso'))
         <div class="alert alert-success">
-            <p class="mensagem-sucesso">{{ session('successo') }} Produto adicionado com sucesso!</p>
+            <p class="mensagem-sucesso">{{ session('sucesso') }}</p>
         </div>
     @endif
 </form>

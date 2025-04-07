@@ -18,7 +18,7 @@
         </div>
     
         <div class="mb-3">
-            <label for="descricao" class="form-label">Informe e descrição:</label>
+            <label for="descricao" class="form-label">Informe a descrição:</label>
             <textarea id="descricao" name="descricao" class="form-control" rows="4" disabled>
                 {{ $produto->descricao }} 
             </textarea>

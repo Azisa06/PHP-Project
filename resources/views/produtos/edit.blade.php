@@ -18,7 +18,7 @@
         </div>
     
         <div class="mb-3">
-            <label for="descricao" class="form-label">Informe e descrição:</label>
+            <label for="descricao" class="form-label">Informe a descrição:</label>
             <textarea id="descricao" name="descricao" class="form-control" rows="4" required="">
                 {{ $produto->descricao }} 
             </textarea>
@@ -45,7 +45,7 @@
             </select>
         </div>
     
-    <button type="submit" class="btn btn-primary">Enviar</button>
+    <button type="submit" class="btn btn-primary">Editar</button>
 </form>
             
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
