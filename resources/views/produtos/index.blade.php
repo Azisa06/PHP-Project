@@ -12,19 +12,18 @@
 
     <a class="btn btn-primary" href="/produtos/create">Novo Produto</a>
     @if (session('erro'))
-        <div class="alert alert-danger">
+        <div class="alert alert-danger fs-5">
             {{ session('erro') }}
         </div>
     @endif
 
     @if (session('sucesso'))
-        <div class="alert alert-success">
-            <p class="small">{{ session('successo') }} Modificação feita com sucesso!</p>
-        </div> <!--Arrumar-->
+        <div class="alert alert-success fs-5">
+            <p class="small">{{ session('sucesso') }}</p>
+        </div>
     @endif
     
     <h2>Registro de Produtos</h2>
-        <!--<a href="#" class="btn btn-success mb-3">Novo Registro</a> não sei o que este botão faz-->
         <table class="table table-hover table-striped">
             <thead>
                 <tr>

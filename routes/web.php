@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\OrcamentoController;
+use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\ServicoController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +28,12 @@ Route::get('/', function () {
 });
 
 Route::resource("clientes", ClienteController::class); //definindo rotas padrões crud para a controller
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::resource("funcionarios", FuncionarioController::class); //definindo rotas padrões crud para a controller
 
 Route::get('/', function () {
     return view('welcome');

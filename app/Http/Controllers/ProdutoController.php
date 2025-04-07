@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\Categoria;
+use App\Models\CategoriaProduto;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Log;
 
@@ -24,7 +24,7 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        $categorias = Categoria::all(); //metodo all() trás todas as informações sobre categoria
+        $categorias = CategoriaProduto::all(); //metodo all() trás todas as informações sobre categoria
         return view("produtos.create", compact("categorias")); //esse método serve para mostrar o formulário
     }
 
@@ -55,7 +55,7 @@ class ProdutoController extends Controller
     public function show(string $id)
     {
         $produto = Produto::findOrFail($id); 
-        $categorias = Categoria::all();
+        $categorias = CategoriaProduto::all();
         return view ("produtos.show", compact('produto', 'categorias'));
     }
 
@@ -65,7 +65,7 @@ class ProdutoController extends Controller
     public function edit(string $id)
     {
         $produto = Produto::findOrFail($id); 
-        $categorias = Categoria::all();
+        $categorias = CategoriaProduto::all();
         return view ("produtos.edit", compact('produto', 'categorias'));
     }
 
