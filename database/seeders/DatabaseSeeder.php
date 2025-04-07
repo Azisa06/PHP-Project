@@ -19,12 +19,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call(CategoriaSeeder::class);
-<<<<<<< HEAD
         $this->call(CategoriaOrcamentoSeeder::class);
         $this->call(CategoriaFuncionarioSeeder::class);
-=======
-        $this->call(CategoriaServicoSeeder::class);
-
->>>>>>> 496cc8c47a19831830dc2aa8183a606050181f93
     }
 }
