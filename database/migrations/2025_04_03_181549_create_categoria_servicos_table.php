@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('funcionarios', function (Blueprint $table) {
+        Schema::create('categoria_servicos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('celular')->nullable();
-            $table->string('cpf');
-            $table->string('email');
-            $table->unsignedBigInteger('categoria_id');
-            $table->foreign('categoria_id')->references('id')->on('categoria_funcionarios')->onDelete('restrict');
+            $table->text('descricao')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('funcionarios');
+        Schema::dropIfExists('categoria_servicos');
     }
 };
