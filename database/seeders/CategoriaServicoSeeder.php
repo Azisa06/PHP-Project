@@ -2,18 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\CategoriaOrcamento;
+use App\Models\CategoriaServico;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CategoriaOrcamentoSeeder extends Seeder
+class CategoriaServicoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        CategoriaOrcamento::create(["nome" => 'Categoria3']);
-        CategoriaOrcamento::create(["nome" => 'Categoria4']);
+        CategoriaServico::create(["nome" => 'Categoria3']);
+        CategoriaServico::create(["nome" => 'Categoria4']);
     }
 }
