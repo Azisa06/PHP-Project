@@ -47,7 +47,7 @@ Route::get('/', function () {
 
 Route::resource("servicos", ServicoController::class); //definindo rotas padrões crud para a controller*/
 
-Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 Route::get("/cadastro", [UserController::class, 'create']);
 Route::post("/cadastro", [UserController::class, 'store']);

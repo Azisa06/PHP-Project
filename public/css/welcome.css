@@ -1,0 +1,119 @@
+body {
+    background: #f4f7fa;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    padding-top: 80px;
+}
+
+@media (max-width: 991px) {
+    body {
+        padding-top: 100px;
+    }
+}
+
+#quem-somos, #servicos, #contato {
+    scroll-margin-top: 85px;
+}
+
+@media (max-width: 991px) {
+    #quem-somos, #servicos, #contato {
+        scroll-margin-top: 100px;
+    }
+}
+
+.quem-somos-justificado {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: justify;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    font-size: 1.35rem;
+}
+
+.banner {
+    min-height: 85vh;
+    background: linear-gradient(135deg, rgba(50, 54, 66, 0.8) 70%, #567254 100%),
+        url('/img/eletronicashock.png')  center top/cover no-repeat;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(40, 49, 72, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-content {
+    background: rgba(25, 25, 40, 0.55);
+    border-radius: 18px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #000000;
+}
+
+.card.service-card, .card.sistema-card {
+    border: none;
+    border-radius: 16px;
+    transition: transform 0.20s, box-shadow 0.20s;
+    background: #fff;
+}
+
+.card.service-card:hover, .card.sistema-card:hover {
+    transform: translateY(-7px) scale(1.04);
+    box-shadow: 0 8px 32px rgba(40, 49, 72, 0.10);
+}
+
+.card-title {
+    font-weight: 600;
+}
+
+.bg-light {
+    background: #f8fafc !important;
+}
+
+.list-unstyled li {
+    margin-bottom: 0.6rem;
+}
+
+.footer-dark {
+    background: linear-gradient(90deg, #000000 80%, #567254 100%);
+    color: #fff;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.btn-warning {
+    color: #212529 !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.btn-outline-light {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.btn-success {
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .banner {
+        min-height: 48vh;
+        padding-bottom: 1.5rem;
+    }
+    .banner-content {
+        padding: 2rem 1rem;
+    }
+    .section-title {
+        font-size: 1.5rem;
+    }
+}
