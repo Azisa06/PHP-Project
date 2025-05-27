@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Orcamento extends Model
 {
     use HasFactory;
-    protected $fillable = ['nome', 'descricao', 'preco', 'categoria_id'];
+    protected $fillable = ['nome', 'descricao', 'preco', 'servico_id'];
 
-    public function categoria() 
+    public function servico()
     {
-        return $this->belongsTo(CategoriaOrcamento::class);
+        return $this->belongsTo(Servico::class);
     }
 }
