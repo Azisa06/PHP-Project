@@ -6,12 +6,17 @@
   <title>Novo Usuário</title>
   <!-- Bootstrap 5 CSS CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Seu CSS personalizado -->
+  <link rel="stylesheet" href="/css/login.css">
 </head>
-<body class="bg-light">
+<body>
 
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
-      <h2 class="text-center mb-4">Novo Usuário</h2>
+    <div class="card login-card shadow">
+      <div class="login-logo-title">
+        <img src="/img/logoshock.png" alt="Logo">
+        <h2 class="mb-0">Novo Usuário</h2>
+      </div>
 
       @if (session('erro'))
         <p class="text-danger">{{ session('erro') }}</p>
@@ -31,13 +36,13 @@
           <label for="password" class="form-label">Senha</label>
           <input name="password" type="password" class="form-control" id="password" placeholder="Digite sua senha" required>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+        <div class="d-flex justify-content-between gap-2 mb-3">
+          <button type="submit" class="btn btn-success login-btn">Cadastrar</button>
+          <a href="/login" class="btn btn-secondary login-btn">
+              Voltar para login
+          </a>
+        </div>
       </form>
-      <div class="mb-3">
-        <a href="/login" class="btn btn-secondary w-100">
-          Voltar para o login!
-        </a>
-      </div>
     </div>
   </div>
 
