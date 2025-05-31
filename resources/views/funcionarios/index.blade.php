@@ -10,7 +10,7 @@
 <body class="container">
     <h1>Funcionários<h1>
 
-    <a class="btn btn-primary" href="/funcionarios/create">Novo Funcionário</a>
+    <a class="btn btn-primary" href="{{ route('funcionarios.create') }}">Novo Funcionário</a>
     @if (session('erro'))
         <div class="alert alert-danger fs-5">
             {{ session('erro') }}

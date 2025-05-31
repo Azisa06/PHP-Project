@@ -10,7 +10,7 @@
 <body class="container">
     <h1>Serviço<h1>
 
-    <a class="btn btn-primary" href="/servicos/create">Novo Serviço</a>
+    <a class="btn btn-primary" href="{{ route('servicos.create') }}">Novo Serviço</a>
     @if (session('erro'))
         <div class="alert alert-danger fs-5">
             {{ session('erro') }}

@@ -44,10 +44,10 @@
                 @endforeach
             </select>
         </div>
-    <p>Deseja excluir o registro?</p>
-    <button type="submit" class="btn btn-danger">Excluir</button>
-    <a href="/produtos" class="btn btn-primary">Cancelar</a>
-</form>
+        <p>Deseja excluir o registro?</p>
+        <button type="submit" class="btn btn-danger">Excluir</button>
+        <a href="/produtos" class="btn btn-primary">Cancelar</a>
+    </form>
             
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
