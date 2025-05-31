@@ -3,8 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FuncionarioController;
+<<<<<<< HEAD
 use App\Http\Controllers\OrcamentoController;
 use App\Http\Controllers\ProdutoController;
+=======
+use App\Http\Controllers\HomeAdmController;
+>>>>>>> 4c3551e80c00387da2d5474371c72ac747dde462
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
@@ -34,6 +38,7 @@ Route::post("/login", [AuthController::class, 'login']);
 
 Route::middleware("auth")->group(function () {
 
+<<<<<<< HEAD
     //create routes
     Route::get('/funcionarios/create', [FuncionarioController::class, 'create'])->middleware('role.adm')->name('funcionarios.create');
     Route::get('/clientes/create', [ClienteController::class, 'create'])->middleware('role.adm')->name('clientes.create');
@@ -64,6 +69,14 @@ Route::middleware("auth")->group(function () {
         Route::get('/funcionarios/{f}/edit', [FuncionarioController::class, 'edit'])->name('funcionarios.edit');
         Route::put('/funcionarios/{f}', [FuncionarioController::class, 'update'])->name('funcionarios.update');
         Route::delete('/funcionarios/{f}', [FuncionarioController::class, 'destroy'])->name('funcionarios.destroy');
+=======
+    Route::middleware([RoleAdmMiddleware::class])->group(function (){ 
+        Route::resource("clientes", ClienteController::class);
+        Route::resource("funcionarios", FuncionarioController::class);
+        Route::resource("produtos", ProdutoController::class);
+        Route::resource("servicos", ServicoController::class);
+        Route::get('/home-adm', [HomeAdmController::class, 'index'])->middleware(['auth', RoleAdmMiddleware::class]);
+>>>>>>> 4c3551e80c00387da2d5474371c72ac747dde462
     });
 
     Route::middleware([RoleAdmMiddleware::class])->group(function () {
