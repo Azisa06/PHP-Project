@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Orcamento extends Model
 {
     use HasFactory;
-    protected $fillable = ['nome', 'descricao', 'preco', 'categoria_id'];
+    protected $fillable = ['nome', 'descricao', 'preco', 'categoria_id', 'status'];
 
     public function categoria() 
     {

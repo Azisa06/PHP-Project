@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FuncionarioController;
+use App\Http\Controllers\HomeAdmController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
@@ -65,9 +66,7 @@ Route::middleware("auth")->group(function (){
         Route::resource("funcionarios", FuncionarioController::class);
         Route::resource("produtos", ProdutoController::class);
         Route::resource("servicos", ServicoController::class);
-        Route::get('/home-adm', function() {
-            return view("home-adm");
-        });
+        Route::get('/home-adm', [HomeAdmController::class, 'index'])->middleware(['auth', RoleAdmMiddleware::class]);
     });
 
     Route::middleware([RoleAtdMiddleware::class])->group(function (){ 
