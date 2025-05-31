@@ -3,16 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-<<<<<<< HEAD
 
-class HomeAdmController extends Controller
-{
-    public function index()
-    {
-        return view('home-adm');
-    }
-}
-=======
 use App\Models\Produto;
 use App\Models\Orcamento;
 
@@ -28,4 +19,3 @@ class HomeAdmController extends Controller
         return view('home-adm', compact('produtos', 'produtosEstoqueBaixo', /*'orcamentosAbertos', 'orcamentosFinalizados'*/));
     }
 }
->>>>>>> 4c3551e80c00387da2d5474371c72ac747dde462
