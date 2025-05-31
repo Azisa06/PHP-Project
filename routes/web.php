@@ -5,11 +5,12 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\OrcamentoController;
 use App\Http\Controllers\ProdutoController;
-use App\Http\Controllers\HomeAdmController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\HomeAdmController; // Importar a nova AdmController
+use App\Http\Controllers\HomeAtdController;
+use App\Http\Controllers\HomeTecController;
 use App\Http\Middleware\RoleAdmMiddleware;
 use App\Http\Middleware\RoleAtdMiddleware; // Presumindo que você terá este middleware
 use App\Http\Middleware\RoleTecMiddleware; // Presumindo que você terá este middleware
@@ -37,10 +38,10 @@ Route::middleware("auth")->group(function () {
 
     //create routes
     Route::get('/funcionarios/create', [FuncionarioController::class, 'create'])->middleware('role.adm')->name('funcionarios.create');
-    Route::get('/clientes/create', [ClienteController::class, 'create'])->middleware('role.adm')->name('clientes.create');
-    Route::get('/produtos/create', [ProdutoController::class, 'create'])->middleware('role.adm')->name('produtos.create');
-    Route::get('/servicos/create', [ServicoController::class, 'create'])->middleware('role.adm')->name('servicos.create');
-    Route::get('/orcamentos/create', [OrcamentoController::class, 'create'])->middleware('role.adm')->name('orcamentos.create');
+    Route::get('/clientes/create', [ClienteController::class, 'create'])->middleware('accessAdmAtd.shared')->name('clientes.create');
+    Route::get('/produtos/create', [ProdutoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('produtos.create');
+    Route::get('/servicos/create', [ServicoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('servicos.create');
+    Route::get('/orcamentos/create', [OrcamentoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('orcamentos.create');
 
     //rotas para todos tipos de users
     Route::post("/logout", [AuthController::class, "logout"])->middleware('auth');
@@ -57,7 +58,7 @@ Route::middleware("auth")->group(function () {
     Route::get('/servicos/{s}/edit', [ServicoController::class, 'edit'])->name('servicos.edit');
     Route::put('/servicos/{s}', [ServicoController::class, 'update'])->name('servicos.update');
 
-    //rotas do ADM
+//rotas exclusivas do ADM
      Route::middleware([RoleAdmMiddleware::class])->group(function () {
         Route::post('/funcionarios', [FuncionarioController::class, 'store'])->name('funcionarios.store');
         Route::get('/funcionarios', [FuncionarioController::class, 'index'])->name('funcionarios.index');
@@ -65,15 +66,10 @@ Route::middleware("auth")->group(function () {
         Route::get('/funcionarios/{f}/edit', [FuncionarioController::class, 'edit'])->name('funcionarios.edit');
         Route::put('/funcionarios/{f}', [FuncionarioController::class, 'update'])->name('funcionarios.update');
         Route::delete('/funcionarios/{f}', [FuncionarioController::class, 'destroy'])->name('funcionarios.destroy');
-    Route::middleware([RoleAdmMiddleware::class])->group(function (){ 
-        Route::resource("clientes", ClienteController::class);
-        Route::resource("funcionarios", FuncionarioController::class);
-        Route::resource("produtos", ProdutoController::class);
-        Route::resource("servicos", ServicoController::class);
-        Route::get('/home-adm', [HomeAdmController::class, 'index'])->middleware(['auth', RoleAdmMiddleware::class]);
     });
 
-    Route::middleware([RoleAdmMiddleware::class])->group(function () {
+//rotas compartilhadas do ADM e ATD
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
         Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
         Route::get('/clientes/{c}', [ClienteController::class, 'show'])->name('clientes.show');
@@ -82,7 +78,7 @@ Route::middleware("auth")->group(function () {
         Route::delete('/clientes/{c}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
     });
 
-    Route::middleware([RoleAdmMiddleware::class])->group(function () {
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::post('/produtos', [ProdutoController::class, 'store'])->name('produtos.store');
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('produtos.index');
         Route::get('/produtos/{p}', [ProdutoController::class, 'show'])->name('produtos.show');
@@ -91,18 +87,29 @@ Route::middleware("auth")->group(function () {
         Route::delete('/produtos/{p}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
     });
 
-    Route::middleware([RoleAdmMiddleware::class])->group(function () {
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::post('/servicos', [ServicoController::class, 'store'])->name('servicos.store');
         Route::delete('/servicos/{s}', [ServicoController::class, 'destroy'])->name('servicos.destroy');
     });
 
-    Route::middleware([RoleAdmMiddleware::class])->group(function () {
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::post('/orcamentos', [OrcamentoController::class, 'store'])->name('orcamentos.store');  
         Route::delete('/orcamentos/{o}', [OrcamentoController::class, 'destroy'])->name('orcamentos.destroy');
     });
 
+//rota de acesso à home-adm
     Route::middleware([RoleAdmMiddleware::class])->group(function () {
         Route::get('/home-adm', [HomeAdmController::class, 'index'])->name('home.adm');
+    });
+
+//rota de acesso à home-atd
+    Route::middleware([RoleAtdMiddleware::class])->group(function () {
+        Route::get('/home-atd', [HomeAtdController::class, 'index'])->name('home.atd');
+    });
+
+//rota de acesso à home-tec
+    Route::middleware([RoleTecMiddleware::class])->group(function () {
+        Route::get('/home-tec', [HomeTecController::class, 'index'])->name('home.tec');
     });
 
 });

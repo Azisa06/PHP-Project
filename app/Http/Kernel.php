@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'role.adm' => \App\Http\Middleware\RoleAdmMiddleware::class,
         'role.atd' => \App\Http\Middleware\RoleAtdMiddleware::class,
         'role.tec' => \App\Http\Middleware\RoleTecMiddleware::class,
+        'accessAdmAtd.shared' => \App\Http\Middleware\AdmAtdSharedRoutesMiddleware::class,
 
     ];
 }
