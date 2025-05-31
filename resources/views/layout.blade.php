@@ -35,6 +35,9 @@
             <li class="nav-item">
               <a class="nav-link" href="/clientes">Clientes</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/orcamentos">Orçamentos</a>
+            </li>
           @endif
           @if (Auth::user()->role == "ATD")
             <li class="nav-item">
@@ -46,13 +49,16 @@
             <li class="nav-item">
               <a class="nav-link" href="/servicos">Serviços</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/orcamentos">Orçamentos</a>
+            </li>
           @endif
           @if (Auth::user()->role == "TEC")
           <li class="nav-item">
               <a class="nav-link" href="/servicos">Serviços</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/produtos">Produtos</a>
+              <a class="nav-link" href="/orcamentos">Orçamentos</a>
             </li>
           @endif
           <li class="nav-item">
