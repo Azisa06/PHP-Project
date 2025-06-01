@@ -1,10 +1,8 @@
 @extends('layout')
 
 @section('principal')
-    <h1>Bem vindo administrador: {{ Auth::user()->name }}</h1>
-    <h2>Estoque de Produtos</h2>
+    <h2>Controle de Estoque de Produtos</h2>
 
-    {{-- Alerta de estoque baixo --}}
     @if(isset($produtosEstoqueBaixo) && $produtosEstoqueBaixo->count())
         <div class="alert alert-warning mt-4">
         <strong>Atenção!</strong>

@@ -27,6 +27,7 @@
           <input name="password" type="password" class="form-control" id="password" placeholder="Digite sua senha" required>
         </div>
         <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+        <a href="/users" class="btn btn-danger">Cancelar</a>
       </form>
     </div>
   </div>

@@ -11,6 +11,7 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\HomeAdmController; // Importar a nova AdmController
 use App\Http\Controllers\HomeAtdController;
 use App\Http\Controllers\HomeTecController;
+use App\Http\Controllers\RelatorioController;
 use App\Http\Middleware\RoleAdmMiddleware;
 use App\Http\Middleware\RoleAtdMiddleware; // Presumindo que você terá este middleware
 use App\Http\Middleware\RoleTecMiddleware; // Presumindo que você terá este middleware
@@ -95,6 +96,11 @@ Route::middleware("auth")->group(function () {
     Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::post('/orcamentos', [OrcamentoController::class, 'store'])->name('orcamentos.store');  
         Route::delete('/orcamentos/{o}', [OrcamentoController::class, 'destroy'])->name('orcamentos.destroy');
+    });
+
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
+        Route::get('/relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
+        Route::get('/relatorio_estoque', [RelatorioController::class, 'gerarRelatorioEstoque'])->name('relatorios.estoque');
     });
 
 //rota de acesso à home-adm

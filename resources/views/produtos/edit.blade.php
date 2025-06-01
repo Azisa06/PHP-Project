@@ -4,50 +4,61 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Editar Produto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   </head>
   <body class="container">
-    <h1>Editar Produto</h1>
-    
-    <form method="post" action="/produtos/{{ $produto-> id }}"> <!--chave primária do produta-->
-        @csrf
-        @method('PUT') <!--padrão quando é para update, fica no lugar do post-->             
-        <div class="mb-3">
-            <label for="nome" class="form-label">Informe o nome:</label>
-            <input type="text" id="nome" name="nome" value="{{ $produto->nome }}" class="form-control" required="">
-        </div>
-    
-        <div class="mb-3">
-            <label for="descricao" class="form-label">Informe a descrição:</label>
-            <textarea id="descricao" name="descricao" class="form-control" rows="4" required="">
-                {{ $produto->descricao }} 
-            </textarea>
-        </div>
-    
-        <div class="mb-3">
-            <label for="preco" class="form-label">Informe o preço:</label>
-            <input type="text" id="preco" name="preco" value="{{ $produto->preco }}" class="form-control" required="">
-        </div>
-    
-        <div class="mb-3">
-            <label for="estoque" class="form-label">Informe o estoque:</label>
-            <input type="text" id="estoque" name="estoque" value="{{ $produto->estoque }}" class="form-control" required="">
-        </div>
-    
-        <div class="mb-3">
-            <label for="categoria" class="form-label">Selecione a categoria:</label>
-            <select id="categoria_id" name="categoria_id" class="form-select" required="">
-                @foreach ($categorias as $c)
-                    <option value="{{ $c->id }}" {{ $produto->categoria_id == $c->id ? "selected" : "" }}> <!--operador ternário para a categoria já vir selecionada quando o id de uma categoria for igual a de um produto-->
-                        {{ $c->nome }}
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6">
+        <div class="card shadow">
+          <div class="card-body">
+            <h1 class="card-title text-center mb-4">
+              <i class="bi bi-pencil-square"></i> Editar Produto
+            </h1>
+            <form method="post" action="/produtos/{{ $produto->id }}">
+              @csrf
+              @method('PUT')
+              <div class="mb-3">
+                <label for="nome" class="form-label">Informe o nome:</label>
+                <input type="text" id="nome" name="nome" value="{{ $produto->nome }}" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="descricao" class="form-label">Informe a descrição:</label>
+                <textarea id="descricao" name="descricao" class="form-control" rows="4" required>{{ $produto->descricao }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label for="preco" class="form-label">Informe o preço:</label>
+                <input type="text" id="preco" name="preco" value="{{ $produto->preco }}" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="estoque" class="form-label">Informe o estoque:</label>
+                <input type="text" id="estoque" name="estoque" value="{{ $produto->estoque }}" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="categoria_id" class="form-label">Selecione a categoria:</label>
+                <select id="categoria_id" name="categoria_id" class="form-select" required>
+                  <option value="" disabled>Selecione...</option>
+                  @foreach ($categorias as $c)
+                    <option value="{{ $c->id }}" {{ $produto->categoria_id == $c->id ? "selected" : "" }}>
+                      {{ $c->nome }}
                     </option>
-                @endforeach
-            </select>
+                  @endforeach
+                </select>
+              </div>
+              <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-primary me-2">
+                  <i class="bi bi-check-circle"></i> Editar
+                </button>
+                <a href="/produtos" class="btn btn-danger">
+                  <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+              </div>
+            </form>
+          </div>
         </div>
-    
-    <button type="submit" class="btn btn-primary">Editar</button>
-</form>
-            
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
