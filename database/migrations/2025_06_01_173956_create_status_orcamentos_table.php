@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orcamentos', function (Blueprint $table) {
+        Schema::create('status_orcamentos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('descricao')->nullable();
-            $table->decimal('preco', 10, 2);
-            $table->foreignId('servico_id')->constrained('servicos');
+            $table->text('descricao')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orcamentos');
+        Schema::dropIfExists('status_orcamentos');
     }
 };

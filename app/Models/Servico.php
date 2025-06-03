@@ -14,4 +14,9 @@ class Servico extends Model
     {
         return $this->belongsTo(CategoriaServico::class);
     }
+
+    public function orcamentos() // <<-- NO PLURAL: 'orcamentos'
+    {
+        return $this->hasMany(Orcamento::class);
+    }
 }

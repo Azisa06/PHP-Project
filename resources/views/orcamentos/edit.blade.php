@@ -21,8 +21,32 @@
               @method('PUT')
 
               <div class="mb-3">
-                <label for="nome" class="form-label">Nome:</label>
-                <input type="text" id="nome" name="nome" value="{{ $orcamento->nome }}" class="form-control" required>
+                <label for="cliente_id" class="form-label">Cliente:</label>
+                <select id="cliente_id" name="cliente_id" class="form-select" required>
+                  <option value="" disabled>Selecione...</option>
+                  @foreach ($clientes as $c)
+                    <option value="{{ $c->id }}" {{ $orcamento->cliente_id == $c->id ? 'selected' : '' }}>
+                      {{ $c->nome }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="data" class="form-label">Data:</label>
+                <input type="data" id="data" name="data" value="{{ $orcamento->data }}" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="servico_id" class="form-label">Serviço:</label>
+                <select id="servico_id" name="servico_id" class="form-select" required>
+                  <option value="" disabled>Selecione...</option>
+                  @foreach ($servicos as $s)
+                    <option value="{{ $s->id }}" {{ $orcamento->servico_id == $s->id ? 'selected' : '' }}>
+                      {{ $s->nome }}
+                    </option>
+                  @endforeach
+                </select>
               </div>
 
               <div class="mb-3">
@@ -36,12 +60,12 @@
               </div>
 
               <div class="mb-3">
-                <label for="servico_id" class="form-label">Serviço:</label>
-                <select id="servico_id" name="servico_id" class="form-select" required>
+                <label for="status_id" class="form-label">Status:</label>
+                <select id="status_id" name="status_id" class="form-select" required>
                   <option value="" disabled>Selecione...</option>
-                  @foreach ($servicos as $s)
-                    <option value="{{ $s->id }}" {{ $orcamento->servico_id == $s->id ? 'selected' : '' }}>
-                      {{ $s->nome }}
+                  @foreach ($status as $st)
+                    <option value="{{ $st->id }}" {{ $orcamento->status_id == $st->id ? 'selected' : '' }}>
+                      {{ $st->nome }} - {{ $st->descricao }}
                     </option>
                   @endforeach
                 </select>

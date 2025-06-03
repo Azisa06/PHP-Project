@@ -34,9 +34,11 @@
       <thead class="table-light">
         <tr>
           <th>ID</th>
-          <th>Nome</th>
+          <th>Cliente</th>
           <th>Preço</th>
           <th>Serviço</th>
+          <th>Data</th>
+          <th>Status</th>
           <th class="text-center">Ações</th>
         </tr>
       </thead>
@@ -44,9 +46,12 @@
         @foreach ($orcamentos as $o)
           <tr>
             <td>{{ $o->id }}</td>
-            <td>{{ $o->nome }}</td>
+            <td>{{ $o->cliente->nome }}</td>
             <td>R$ {{ number_format($o->preco, 2, ',', '.') }}</td>
             <td>{{ $o->servico->nome }}</td>
+            <td>{{ $o->data }}</td>
+            <td>{{ $o->statusOrcamento->nome ?? 'N/A' }}</td>
+
             <td>
               <div class="d-flex justify-content-center gap-2">
                 <a href="/orcamentos/{{ $o->id }}/edit" class="btn btn-warning btn-sm px-3">

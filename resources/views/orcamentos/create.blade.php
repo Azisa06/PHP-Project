@@ -20,20 +20,32 @@
               @csrf
 
               <div class="mb-3">
-                <label for="servico_id" class="form-label">Serviço</label>
-                <select name="servico_id" id="servico_id" class="form-select" required>
-                  <option value="">Selecione um serviço</option>
-                  @foreach($servicos as $servico)
-                    <option value="{{ $servico->id }}">
-                      {{ $servico->nome }} - R$ {{ number_format($servico->preco, 2, ',', '.') }}
+                <label for="cliente_id" class="form-label">Cliente</label>
+                <select name="cliente_id" id="cliente_id" class="form-select" required>
+                  <option value="">Selecione um cliente</option>
+                  @foreach($clientes as $c)
+                    <option value="{{ $c->id }}">
+                      {{ $c->nome }} - CPF {{ ($c->cpf) }}
                     </option>
                   @endforeach
                 </select>
               </div>
 
               <div class="mb-3">
-                <label for="nome" class="form-label">Nome</label>
-                <input type="text" name="nome" class="form-control" required>
+                <label for="data" class="form-label">Data</label>
+                <input type="date" name="data" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="servico_id" class="form-label">Serviço</label>
+                <select name="servico_id" id="servico_id" class="form-select" required>
+                  <option value="">Selecione um serviço</option>
+                  @foreach($servicos as $s)
+                    <option value="{{ $s->id }}">
+                      {{ $s->nome }} - R$ {{ number_format($s->preco, 2, ',', '.') }}
+                    </option>
+                  @endforeach
+                </select>
               </div>
 
               <div class="mb-3">
@@ -45,6 +57,18 @@
                 <label for="preco" class="form-label">Preço</label>
                 <input type="text" name="preco" class="form-control" required>
               </div>
+
+              <!--<div class="mb-3">
+                <label for="status_id" class="form-label">Status</label>
+                <select name="status_id" id="status_id" class="form-select" required>
+                  <option value="">Selecione um status</option>
+                  @foreach($status as $st)
+                    <option value="{{ $st->id }}">
+                      {{ $st->nome }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>-->
 
               <div class="d-flex justify-content-center mt-4">
                 <button type="submit" class="btn btn-primary me-2">

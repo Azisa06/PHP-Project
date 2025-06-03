@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Orcamento;
 use App\Models\Servico;
+use App\Models\StatusOrcamento;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,22 +14,27 @@ class OrcamentoController extends Controller
 {
     public function index()
     {
-        $orcamentos = Orcamento::with('servicos')->paginate(10);
+        $orcamentos = Orcamento::with('servico', 'cliente', 'statusOrcamento')->paginate(10);
         return view('orcamentos.index', compact('orcamentos'));
     }
 
     public function create()
     {
         $servicos = Servico::all();
-        return view('orcamentos.create', compact('servicos'));
+        $clientes = Cliente::all();
+        $status = StatusOrcamento::all();
+        return view('orcamentos.create', compact('servicos', 'clientes', 'status'));
     }
 
     public function store(Request $request)
     {
-        dd('CHEGUEI NO ORCAMENTO CONTROLLER -> STORE!', $request->all());  
-        
         try {
-            Orcamento::create($request->all());
+            $data = $request->all();
+            $status = StatusOrcamento::where('nome', 'Aguardando Análise')->first();
+            $data['status_id'] = $status->id ?? 1;
+
+            Orcamento::create($data);
+
             return redirect()->route('orcamentos.index')
                 ->with('sucesso', 'Orçamento criado com sucesso!');
         } catch (Exception $e) {
@@ -42,7 +49,7 @@ class OrcamentoController extends Controller
 
     public function show(string $id)
     {
-        $orcamento = Orcamento::with('servicos')->findOrFail($id);
+        $orcamento = Orcamento::with('servico', 'cliente', 'statusOrcamento')->findOrFail($id);
         return view("orcamentos.show", compact('orcamento'));
     }
 
@@ -50,7 +57,9 @@ class OrcamentoController extends Controller
     {
         $orcamento = Orcamento::findOrFail($id);
         $servicos = Servico::all();
-        return view("orcamentos.edit", compact('orcamento', 'servicos'));
+        $clientes = Cliente::all();
+        $status = StatusOrcamento::all();
+        return view("orcamentos.edit", compact('orcamento', 'servicos', 'clientes', 'status'));
     }
 
     public function update(Request $request, string $id)

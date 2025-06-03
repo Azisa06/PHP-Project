@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use Illuminate\Database\Console\Migrations\StatusCommand;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriaServicoSeeder::class);
         $this->call(CategoriaFuncionarioSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(StatusOrcamentoSeeder::class);
     }
 }

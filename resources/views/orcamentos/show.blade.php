@@ -21,8 +21,13 @@
               @method('DELETE')
 
               <div class="mb-3">
-                <label class="form-label">Nome:</label>
-                <input type="text" class="form-control" value="{{ $orcamento->nome }}" disabled>
+                <label class="form-label">Cliente:</label>
+                <input type="text" class="form-control" value="{{ $orcamento->cliente->nome ?? 'N/A' }}" disabled>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Data:</label>
+                <input type="date" class="form-control" value="{{ $orcamento->data }}" disabled>
               </div>
 
               <div class="mb-3">
@@ -38,6 +43,11 @@
               <div class="mb-3">
                 <label class="form-label">Serviço:</label>
                 <input type="text" class="form-control" value="{{ $orcamento->servico->nome ?? 'N/A' }}" disabled>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Status:</label>
+                <input type="text" class="form-control" value="{{ $orcamento->statusOrcamento->nome ?? 'N/A' }}" disabled>
               </div>
 
               <p class="text-center">Deseja excluir o registro?</p>
