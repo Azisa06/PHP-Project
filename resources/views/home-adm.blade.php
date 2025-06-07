@@ -52,4 +52,39 @@
         });
     </script>
     <h2>Controle de orçamentos</h2>
+    <canvas id="graficoOrcamentos" width="300" height="300"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('graficoOrcamentos').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Abertos', 'Finalizados'],
+                datasets: [{
+                    label: 'Orçamentos',
+                    data: [{{ $orcamentosAbertos }}, {{ $orcamentosFinalizados }}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)', 
+                        'rgba(54, 162, 235, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', 
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    });
+    </script>
 @endsection

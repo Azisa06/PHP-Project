@@ -12,9 +12,9 @@ class HomeAdmController extends Controller
         $estoqueMinimo = 6;
         $produtos = Produto::select('nome', 'estoque')->get();
         $produtosEstoqueBaixo = Produto::where('estoque', '<', $estoqueMinimo)->get();
-        //$orcamentosAbertos = Orcamento::where('status', 'aberto')->count();
-        //$orcamentosFinalizados = Orcamento::where('status', 'finalizado')->count();
+        $orcamentosAbertos = Orcamento::where('status_id', 1)->count();
+        $orcamentosFinalizados = Orcamento::where('status_id', 6)->count();
 
-        return view('home-adm', compact('produtos', 'produtosEstoqueBaixo', /*'orcamentosAbertos', 'orcamentosFinalizados'*/));
+        return view('home-adm', compact('produtos', 'produtosEstoqueBaixo', 'orcamentosAbertos', 'orcamentosFinalizados'));
     }
 }
