@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CompraController;
 use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\OrcamentoController;
 use App\Http\Controllers\ProdutoController;
@@ -43,11 +44,12 @@ Route::middleware("auth")->group(function () {
     Route::get('/produtos/create', [ProdutoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('produtos.create');
     Route::get('/servicos/create', [ServicoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('servicos.create');
     Route::get('/orcamentos/create', [OrcamentoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('orcamentos.create');
+    Route::get('/compras/create', [CompraController::class, 'create'])->middleware('accessAdmAtd.shared')->name('compras.create');
 
     //rotas para todos tipos de users
     Route::post("/logout", [AuthController::class, "logout"])->middleware('auth');
-    Route::get("/editar", [UserController::class, 'edit'])->middleware('auth');
-    Route::post("/editar", [UserController::class, 'update'])->middleware('auth');
+    Route::get("/users/{u}/edit", [UserController::class, 'edit'])->middleware('auth');
+    Route::put("/users/{u}", [UserController::class, 'update'])->middleware('auth');
 
     Route::get('/orcamentos', [OrcamentoController::class, 'index'])->name('orcamentos.index');
     Route::get('/orcamentos/{o}', [OrcamentoController::class, 'show'])->name('orcamentos.show');
@@ -86,6 +88,15 @@ Route::middleware("auth")->group(function () {
         Route::get('/produtos/{p}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit');
         Route::put('/produtos/{p}', [ProdutoController::class, 'update'])->name('produtos.update');
         Route::delete('/produtos/{p}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
+    });
+
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
+        Route::post('/compras', [CompraController::class, 'store'])->name('compras.store');
+        Route::get('/compras', [CompraController::class, 'index'])->name('compras.index');
+        Route::get('/compras/{co}', [CompraController::class, 'show'])->name('compras.show');
+        Route::get('/compras/{co}/edit', [CompraController::class, 'edit'])->name('compras.edit');
+        Route::put('/compras/{co}', [CompraController::class, 'update'])->name('compras.update');
+        Route::delete('/compras/{co}', [CompraController::class, 'destroy'])->name('compras.destroy');
     });
 
     Route::middleware(['accessAdmAtd.shared'])->group(function () {

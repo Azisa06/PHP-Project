@@ -41,6 +41,9 @@
               <a class="nav-link" href="/orcamentos">Orçamentos</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="/compras">Compras</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="/relatorios">Relatórios</a>
             </li>
           @endif
@@ -56,6 +59,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/orcamentos">Orçamentos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/compras">Compras</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/relatorios">Relatórios</a>
@@ -74,7 +80,7 @@
           Olá, {{ Auth::user()->name }}
         </span>
         <div class="d-flex gap-2 align-items-center">
-          <a href="/editar" class="btn btn-success">Alterar meus dados</a>
+          <a href="/users/{{ Auth::user()->id }}/edit" class="btn btn-success">Alterar meus dados</a>
           <form method="POST" action="/logout" class="m-0">
               @csrf
               <button type="submit" class="btn btn-danger">Sair</button>

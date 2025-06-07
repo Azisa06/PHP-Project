@@ -30,16 +30,6 @@
               </div>
 
               <div class="mb-3">
-                <label for="preco" class="form-label">Informe o preço:</label>
-                <input type="text" id="preco" name="preco" class="form-control" required>
-              </div>
-
-              <div class="mb-3">
-                <label for="estoque" class="form-label">Informe o estoque:</label>
-                <input type="text" id="estoque" name="estoque" class="form-control" required>
-              </div>
-
-              <div class="mb-3">
                 <label for="categoria_id" class="form-label">Selecione a categoria:</label>
                 <select id="categoria_id" name="categoria_id" class="form-select" required>
                   <option value="" disabled selected>Selecione...</option>
