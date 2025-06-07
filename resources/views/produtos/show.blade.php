@@ -28,6 +28,7 @@
                 <label for="descricao" class="form-label">Informe a descrição:</label>
                 <textarea id="descricao" name="descricao" class="form-control" rows="4" disabled>{{ $produto->descricao }}</textarea>
               </div>
+              <!-- manter mas associar à função de compra
               <div class="mb-3">
                 <label for="preco" class="form-label">Informe o preço:</label>
                 <input type="text" id="preco" name="preco" value="{{ $produto->preco }}" class="form-control" disabled>
@@ -35,7 +36,7 @@
               <div class="mb-3">
                 <label for="estoque" class="form-label">Informe o estoque:</label>
                 <input type="text" id="estoque" name="estoque" value="{{ $produto->estoque }}" class="form-control" disabled>
-              </div>
+              </div> -->
               <div class="mb-3">
                 <label for="categoria" class="form-label">Selecione a categoria:</label>
                 <select id="categoria_id" name="categoria_id" class="form-select" disabled>
