@@ -10,12 +10,17 @@
   </head>
   <body class="container mt-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="mb-0">Produtos</h1>
-      <a class="btn btn-primary" href="{{ route('produtos.create') }}">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+    <h1 class="mb-0">Produtos</h1>
+    <div class="d-flex flex-column align-items-end">
+      <a class="btn btn-primary mb-2" href="{{ route('produtos.create') }}">
         <i class="bi bi-box-seam"></i> Cadastrar Produto
       </a>
+      <a class="btn btn-warning" href="{{ route('compras.create') }}">
+        <i class="bi bi-cart-plus"></i> Cadastrar Compra
+      </a>
     </div>
+  </div>
 
     @if (session('erro'))
       <div class="alert alert-danger fs-5">
@@ -67,6 +72,9 @@
                 @else / @endif"
         class="btn btn-success">
         <i class="bi bi-arrow-left-circle"></i> Voltar
+      </a>
+      <a class="btn btn-success ms-2" href="{{ route('compras.index') }}">
+        Consultar Compras <i class="bi bi-arrow-right-circle"></i>
       </a>
     </div>
 

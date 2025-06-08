@@ -41,9 +41,6 @@
               <a class="nav-link" href="/orcamentos">Orçamentos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/compras">Compras</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="/relatorios">Relatórios</a>
             </li>
           @endif
@@ -59,9 +56,6 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/orcamentos">Orçamentos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/compras">Compras</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/relatorios">Relatórios</a>

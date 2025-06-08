@@ -75,11 +75,7 @@
     </table>
 
     <div class="d-flex justify-content-end mt-3">
-      <a href="@if(Auth::user()->role == 'ADM') /home-adm
-                @elseif(Auth::user()->role == 'ATD') /home-atd
-                @elseif(Auth::user()->role == 'TEC') /home-tec
-                @else / @endif" 
-         class="btn btn-success">
+      <a href="/produtos" class="btn btn-success">
         <i class="bi bi-arrow-left-circle"></i> Voltar
       </a>
     </div>

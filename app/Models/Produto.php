@@ -25,4 +25,15 @@ class Produto extends Model
     {
         return $this->hasMany(Compra::class);
     }
+
+    public function movimentacoes()
+    {
+        return $this->hasMany(MovimentacaoEstoque::class);
+    }
+
+    // Estoque atual calculado
+    public function getEstoqueAtualAttribute()
+    {
+        return $this->movimentacoes()->sum('quantidade');
+    }
 }

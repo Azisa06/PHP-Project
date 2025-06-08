@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\CategoriaFuncionario;
+use App\Models\MovimentacaoEstoque;
 use App\Models\Compra;
 use App\Models\ItemCompra;
 use App\Models\Produto;
@@ -56,9 +57,12 @@ class CompraController extends Controller
                 ]);
 
                 // Atualiza o estoque do produto
-                $produto = Produto::find($item['produto_id']);
-                $produto->estoque += $item['quantidade'];
-                $produto->save();
+                MovimentacaoEstoque::create([
+                    'produto_id' => $produto->id,
+                    'quantidade' => $item['quantidade'], // positivo = entrada
+                    'tipo' => 'entrada',
+                    'descricao' => 'Compra ID ' . $compra->id,
+                ]);
             }
 
             return redirect()->route('compras.index')
