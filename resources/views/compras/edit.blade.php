@@ -44,11 +44,11 @@
                     </div>
                     <div class="col-md-3">
                       <label for="quantidade_{{ $index }}" class="form-label">Quantidade</label>
-                      <input type="number" name="produtos[{{ $index }}][quantidade]" id="quantidade_{{ $index }}" value="{{ $produto->pivot->quantidade }}" class="form-control" required min="1">
+                      <input type="number" name="produtos[{{ $index }}][quantidade]" id="quantidade_{{ $index }}" value="{{ $produto->pivot->quantidade }}" class="form-control quantidade" required min="1">
                     </div>
                     <div class="col-md-3">
                       <label for="preco_{{ $index }}" class="form-label">Preço Unitário</label>
-                      <input type="text" name="produtos[{{ $index }}][preco]" id="preco_{{ $index }}" value="{{ number_format($produto->pivot->preco, 2, '.', '') }}" class="form-control" required>
+                      <input type="text" name="produtos[{{ $index }}][preco_compra]" id="preco_{{ $index }}" value="{{ number_format($produto->pivot->preco, 2, ',', '.') }}" class="form-control preco" required>
                     </div>
                   </div>
                   <div class="row">
@@ -80,5 +80,38 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function formatarReal(valor) {
+        return 'R$ ' + valor.toFixed(2).replace('.', ',');
+      }
+
+      function atualizarTotais() {
+        let total = 0;
+
+        document.querySelectorAll('.border.rounded').forEach(container => {
+          const qtdInput = container.querySelector('input[name*="[quantidade]"]');
+          const precoInput = container.querySelector('input[name*="[preco]"]');
+          const subtotalInput = container.querySelector('input[readonly]');
+
+          const qtd = parseInt(qtdInput.value) || 0;
+          const preco = parseFloat(precoInput.value.replace(',', '.')) || 0;
+          const subtotal = qtd * preco;
+
+          subtotalInput.value = formatarReal(subtotal);
+          total += subtotal;
+        });
+
+        const totalInput = document.getElementById('preco_total');
+        if (totalInput) {
+          totalInput.value = formatarReal(total);
+        }
+      }
+
+      // Atualiza ao alterar quantidade ou preço
+      document.querySelectorAll('input[name*="[quantidade]"], input[name*="[preco]"]').forEach(input => {
+        input.addEventListener('input', atualizarTotais);
+      });
+    </script>
+
   </body>
 </html>

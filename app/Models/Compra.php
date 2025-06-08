@@ -11,11 +11,6 @@ class Compra extends Model
 
     protected $fillable = ['data'];
 
-    public function itens()
-    {
-        return $this->hasMany(ItemCompra::class);
-    }
-
     public function getTotalAttribute()
     {
         return $this->itens->sum(function ($item) {
@@ -23,8 +18,9 @@ class Compra extends Model
         });
     }
 
-    public function produto()
+    public function itens()
     {
-        return $this->belongsTo(Produto::class);
+        return $this->hasMany(ItemCompra::class);
     }
+
 }

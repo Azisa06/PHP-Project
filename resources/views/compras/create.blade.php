@@ -40,7 +40,7 @@
                     <input type="number" name="produtos[0][quantidade]" class="form-control quantidade" min="1" placeholder="Qtd" required>
                   </div>
                   <div class="col-md-2">
-                    <input type="text" name="produtos[0][preco]" class="form-control preco" placeholder="Preço">
+                    <input type="text" name="produtos[0][preco_compra]" class="form-control preco" placeholder="Preço de Compra" required>
                   </div>
                   <div class="col-md-2">
                     <input type="text" class="form-control subtotal" placeholder="Subtotal" readonly>

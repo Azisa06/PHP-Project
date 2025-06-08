@@ -8,12 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('movimentacoes_estoque', function (Blueprint $table) {
+        Schema::create('estoques', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('produto_id');
             $table->integer('quantidade'); // positivo: entrada, negativo: saída
-            $table->string('tipo'); // exemplo: 'entrada', 'saida'
-            $table->text('descricao')->nullable();
+            $table->decimal('preco_venda', 10, 2);  // Preço de venda com 40%
+            $table->enum('tipo', ['entrada', 'saída']);
+            $table->date('data');
             $table->timestamps();
 
             $table->foreign('produto_id')->references('id')->on('produtos')->onDelete('cascade');
@@ -22,6 +23,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('movimentacoes_estoque');
+        Schema::dropIfExists('estoques');
     }
 };

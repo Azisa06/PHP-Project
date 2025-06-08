@@ -9,7 +9,7 @@ class ItemCompra extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['compra_id', 'produto_id', 'quantidade', 'preco_unitario'];
+    protected $fillable = ['compra_id', 'produto_id', 'quantidade', 'preco_compra'];
 
     public function compra()
     {
@@ -25,4 +25,5 @@ class ItemCompra extends Model
     {
         return $this->quantidade * $this->preco_unitario;
     }
+
 }

@@ -34,25 +34,25 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach ($compra->produtos as $produto)
+                @foreach ($compra->itens as $item)
                   <tr>
-                    <td>{{ $produto->nome }}</td>
-                    <td>{{ $produto->pivot->quantidade }}</td>
-                    <td>R$ {{ number_format($produto->pivot->preco, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($produto->pivot->preco * $produto->pivot->quantidade, 2, ',', '.') }}</td>
+                    <td>{{ $item->produto->nome ?? 'Produto não encontrado' }}</td>
+                    <td>{{ $item->quantidade }}</td>
+                    <td>R$ {{ number_format($item->preco_unitario, 2, ',', '.') }}</td>
+                    <td>R$ {{ number_format($item->quantidade * $item->preco_unitario, 2, ',', '.') }}</td>
                   </tr>
                 @endforeach
               </tbody>
               <tfoot>
                 <tr class="table-secondary">
                   <th colspan="3" class="text-end">Preço Total:</th>
-                  <th>R$ {{ number_format($compra->preco_total, 2, ',', '.') }}</th>
+                  <th>R$ {{ number_format($compra->total, 2, ',', '.') }}</th>
                 </tr>
               </tfoot>
             </table>
 
             <div class="d-flex justify-content-center mt-4">
-              <a href="/compras" class="btn btn-secondary">
+              <a href="{{ route('compras.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left-circle"></i> Voltar
               </a>
             </div>

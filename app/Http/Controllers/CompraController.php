@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\CategoriaFuncionario;
 use App\Models\MovimentacaoEstoque;
 use App\Models\Compra;
+use App\Models\Estoque;
 use App\Models\ItemCompra;
 use App\Models\Produto;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CompraController extends Controller
@@ -20,6 +22,19 @@ class CompraController extends Controller
     {
         $compras = Compra::with(['itens.produto'])->get();
         return view("compras.index", compact('compras'));
+
+        foreach ($compras as $compra) {
+            $quantidadeTotal = 0;
+            $precoTotal = 0;
+
+            foreach ($compra->itens as $item) {
+                $quantidadeTotal += $item->quantidade;
+                $precoTotal += $item->quantidade * $item->preco_unitario ?? 0;
+            }
+
+            $compra->quantidade_total = $quantidadeTotal;
+            $compra->preco_total = $precoTotal;
+        }
     }
 
     /**
@@ -41,29 +56,43 @@ class CompraController extends Controller
                 'data' => 'required|date',
                 'produtos.*.produto_id' => 'required|exists:produtos,id',
                 'produtos.*.quantidade' => 'required|integer|min:1',
+                'produtos.*.preco_compra' => 'required|numeric|min:0.01',
             ]);
 
-            $compra = Compra::create([
-                'data' => $request->data
-            ]);
-
-            foreach ($request->produtos as $item) {
-                $produto = Produto::find($item['produto_id']);
-                ItemCompra::create([
-                    'compra_id' => $compra->id,
-                    'produto_id' => $item['produto_id'],
-                    'quantidade' => $item['quantidade'],
-                    'preco_unitario' => $produto->preco, // Puxa o preço atual do produto
+            DB::transaction(function () use ($request) {
+                $compra = Compra::create([
+                    'data' => $request->data
                 ]);
 
-                // Atualiza o estoque do produto
-                MovimentacaoEstoque::create([
-                    'produto_id' => $produto->id,
-                    'quantidade' => $item['quantidade'], // positivo = entrada
-                    'tipo' => 'entrada',
-                    'descricao' => 'Compra ID ' . $compra->id,
-                ]);
-            }
+                foreach ($request->produtos as $item) {
+                    ItemCompra::create([
+                        'compra_id' => $compra->id,
+                        'produto_id' => $item['produto_id'],
+                        'quantidade' => $item['quantidade'],
+                        'preco_compra' => $item['preco_compra'],
+                    ]);
+
+                    $precoVenda = $item['preco_compra'] * 1.4;
+
+                    $estoque = Estoque::where('produto_id', $item['produto_id'])->first();
+
+                    if ($estoque) {
+                        $estoque->quantidade += $item['quantidade'];
+                        $estoque->preco_venda = $precoVenda;
+                        $estoque->data = $request->data;
+                        $estoque->save();
+                    } else {
+                        Estoque::create([
+                            'produto_id' => $item['produto_id'],
+                            'quantidade' => $item['quantidade'],
+                            'tipo' => 'entrada',
+                            'descricao' => 'Compra ID ' . $compra->id,
+                            'preco_venda' => $precoVenda,
+                            'data' => $request->data,
+                        ]);
+                    }
+                }
+            });
 
             return redirect()->route('compras.index')
                 ->with('sucesso', 'Compra cadastrada com sucesso!');
@@ -73,14 +102,14 @@ class CompraController extends Controller
                 'request' => $request->all()
             ]);
             return redirect()->route('compras.index')
-                ->with('erro', 'Erro ao cadastrar a compra!');
+                ->with('erro', 'Erro: ' . $e->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-   public function show(string $id)
+    public function show(string $id)
     {
         $compra = Compra::with(['itens.produto'])->findOrFail($id);
         return view("compras.show", compact('compra'));
@@ -102,57 +131,60 @@ class CompraController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-        $request->validate([
-            'data' => 'required|date',
-            'produtos.*.produto_id' => 'required|exists:produtos,id',
-            'produtos.*.quantidade' => 'required|integer|min:1',
-        ]);
-
-        $compra = Compra::with('itens')->findOrFail($id);
-        $compra->update([
-            'data' => $request->data,
-        ]);
-
-        // Reverter o estoque dos produtos anteriores
-        foreach ($compra->itens as $itemAntigo) {
-            $produto = Produto::find($itemAntigo->produto_id);
-            if ($produto) {
-                $produto->estoque -= $itemAntigo->quantidade;
-                $produto->save();
-            }
-        }
-
-        // Apagar os itens antigos da compra
-        $compra->itens()->delete();
-
-        // Adicionar os novos itens e atualizar o estoque
-        foreach ($request->produtos as $itemNovo) {
-            $produto = Produto::find($itemNovo['produto_id']);
-            ItemCompra::create([
-                'compra_id' => $compra->id,
-                'produto_id' => $itemNovo['produto_id'],
-                'quantidade' => $itemNovo['quantidade'],
-                'preco_unitario' => $produto->preco,
+            $request->validate([
+                'data' => 'required|date',
+                'produtos.*.produto_id' => 'required|exists:produtos,id',
+                'produtos.*.quantidade' => 'required|integer|min:1',
+                'produtos.*.preco_compra' => 'required|numeric|min:0.01',
             ]);
 
-            $produto = Produto::find($itemNovo['produto_id']);
-            if ($produto) {
-                $produto->estoque += $itemNovo['quantidade'];
-                $produto->save();
-            }
-        }
+            DB::transaction(function () use ($request, $id) {
+                $compra = Compra::findOrFail($id);
+                $compra->update([
+                    'data' => $request->data,
+                ]);
 
-        return redirect()->route('compras.index')
-            ->with('sucesso', 'Compra e itens atualizados com sucesso!');
-    } catch (Exception $e) {
-        Log::error("Erro ao atualizar a compra: " . $e->getMessage(), [
-            'stack' => $e->getTraceAsString(),
-            'compra_id' => $id,
-            'request' => $request->all()
-        ]);
-        return redirect()->route('compras.index')
-            ->with('erro', 'Erro ao atualizar a compra!');
-    }
+                foreach ($request->produtos as $item) {
+                    ItemCompra::create([
+                        'compra_id' => $compra->id,
+                        'produto_id' => $item['produto_id'],
+                        'quantidade' => $item['quantidade'],
+                        'preco_compra' => $item['preco_compra'],
+                    ]);
+
+                    $precoVenda = $item['preco_compra'] * 1.4;
+
+                    $estoque = Estoque::where('produto_id', $item['produto_id'])->first();
+
+                    if ($estoque) {
+                        $estoque->quantidade += $item['quantidade'];
+                        $estoque->preco_venda = $precoVenda;
+                        $estoque->data = $request->data;
+                        $estoque->save();
+                    } else {
+                        Estoque::create([
+                            'produto_id' => $item['produto_id'],
+                            'quantidade' => $item['quantidade'],
+                            'tipo' => 'entrada',
+                            'descricao' => 'Atualização de Compra ID ' . $compra->id,
+                            'preco_venda' => $precoVenda,
+                            'data' => $request->data,
+                        ]);
+                    }
+                }
+            });
+
+            return redirect()->route('compras.index')
+                ->with('sucesso', 'Compra atualizada com sucesso!');
+        } catch (Exception $e) {
+            Log::error("Erro ao atualizar a compra: " . $e->getMessage(), [
+                'stack' => $e->getTraceAsString(),
+                'compra_id' => $id,
+                'request' => $request->all()
+            ]);
+            return redirect()->route('compras.index')
+                ->with('erro', 'Erro ao atualizar a compra!');
+        }
     }
 
     /**

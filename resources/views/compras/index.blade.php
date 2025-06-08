@@ -36,6 +36,8 @@
           <th>ID</th>
           <th>Data</th>
           <th>Produtos</th>
+          <th>Quantidade</th>
+          <th>Preço Unitário</th>
           <th>Preço Total</th>
           <th class="text-center">Ações</th>
         </tr>
@@ -45,20 +47,52 @@
           <tr>
             <td>{{ $compra->id }}</td>
             <td>{{ \Carbon\Carbon::parse($compra->data)->format('d/m/Y') }}</td>
+
+            {{-- Produtos --}}
+            <td>
+              <ul class="mb-0">
+                @foreach ($compra->itens as $item)
+                  <li>{{ $item->produto->nome ?? 'Produto não encontrado' }}</li>
+                @endforeach
+              </ul>
+            </td>
+
+            {{-- Quantidades --}}
+            <td>
+              <ul class="mb-0">
+                @foreach ($compra->itens as $item)
+                  <li>{{ $item->quantidade }}</li>
+                @endforeach
+              </ul>
+            </td>
+
+            {{-- Preço unitário --}}
             <td>
               <ul class="mb-0">
                 @foreach ($compra->itens as $item)
                   <li>
-                    {{ $item->produto->nome ?? 'Produto não encontrado' }}
-                    (Qtd: {{ $item->quantidade }},
-                    R$ {{ number_format($item->preco_unitario, 2, ',', '.') }})
+                    R$ {{ number_format($item->preco_compra, 2, ',', '.') }}
                   </li>
                 @endforeach
               </ul>
             </td>
+
+            {{-- Preço total --}}
             <td>
-              R$ {{ number_format($compra->total, 2, ',', '.') }}
+              R$
+              {{
+                number_format(
+                  $compra->itens->sum(function ($item) {
+                    return $item->quantidade * $item->preco_compra;
+                  }),
+                  2,
+                  ',',
+                  '.'
+                )
+              }}
             </td>
+
+            {{-- Ações --}}
             <td>
               <div class="d-flex justify-content-center gap-2">
                 <a href="{{ route('compras.edit', $compra->id) }}" class="btn btn-warning btn-sm px-3">
