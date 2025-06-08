@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\EstoqueController;
 use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\OrcamentoController;
 use App\Http\Controllers\ProdutoController;
@@ -112,6 +113,10 @@ Route::middleware("auth")->group(function () {
     Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::get('/relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
         Route::get('/relatorio_estoque', [RelatorioController::class, 'gerarRelatorioEstoque'])->name('relatorios.estoque');
+    });
+
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
+        Route::get('/estoques', [EstoqueController::class, 'index'])->name('estoques.index');
     });
 
 //rota de acesso à home-adm
