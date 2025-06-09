@@ -58,6 +58,9 @@
                 <a href="/produtos/{{ $p->id }}" class="btn btn-info btn-sm px-3 text-white">
                   <i class="bi bi-eye"></i> Consultar
                 </a>
+                <a href="{{ route('estoques.index') }}" class="btn btn-dark btn-sm px-3">
+                  <i class="bi bi-box"></i> Estoque
+                </a>
               </div>
             </td>
           </tr>

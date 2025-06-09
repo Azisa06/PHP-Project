@@ -134,4 +134,5 @@ Route::middleware("auth")->group(function () {
         Route::get('/home-tec', [HomeTecController::class, 'index'])->name('home.tec');
     });
 
+    Route::patch('/orcamentos/{id}/status', [HomeAtdController::class, 'updateStatus'])->name('orcamentos.status');
 });

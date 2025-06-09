@@ -1,5 +1,6 @@
 @extends('layout')
 @section('principal')
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
       <h2 class="text-center mb-4">Alterar Dados</h2>
@@ -33,9 +34,15 @@
           <label for="password_confirmation" class="form-label">Confirme a nova senha</label>
           <input name="password_confirmation" type="password" class="form-control" id="password_confirmation" placeholder="Confirme a nova senha">
         </div>
-        <button type="submit" class="btn btn-primary w-100">Salvar Alterações</button>
-        {{-- O botão "Cancelar" foi ajustado para voltar para a home, pois "/users" não é uma rota de listagem de usuário logado --}}
-        <a href="{{ url('/login') }}" class="btn btn-danger mt-2 w-100">Cancelar</a>
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-primary me-2">
+                <i class="bi bi-check-circle"></i> Salvar Alterações
+            </button>
+             {{-- O botão "Cancelar" foi ajustado para voltar para a home, pois "/users" não é uma rota de listagem de usuário logado --}}
+            <a href="{{ url('/login') }}" class="btn btn-danger">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+        </div>
       </form>
     </div>
   </div>

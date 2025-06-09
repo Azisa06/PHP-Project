@@ -36,4 +36,14 @@ class Produto extends Model
     {
         return $this->movimentacoes()->sum('quantidade');
     }
+
+    public function estoques()
+    {
+        return $this->hasMany(Estoque::class);
+    }
+
+    public function ultimoEstoque()
+    {
+        return $this->hasOne(Estoque::class)->latestOfMany();
+    }
 }

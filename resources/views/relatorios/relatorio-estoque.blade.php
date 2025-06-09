@@ -83,8 +83,14 @@
                 <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->nome }}</td>
-                    <td>{{ $item->estoque }}</td>
-                    <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
+                    <td>{{ $item->estoques->sum('quantidade') }}</td>
+                    <td>
+                        @if($item->ultimoEstoque)
+                            R$ {{ number_format($item->ultimoEstoque->preco_venda, 2, ',', '.') }}
+                        @else
+                            Não disponível
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>

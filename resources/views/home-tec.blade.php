@@ -1,13 +1,16 @@
 @extends('layout')
 @section('principal')
 
-<h2>Fila de Orçamentos Aprovados (Aguardando Peças)</h2>
+<h2 class="mb-4">Fila de Orçamentos Aprovados</h2>
 
-    @if ($orcamentosAprovados->isEmpty())
-        <p>Nenhum orçamento aprovado no momento.</p>
-    @else
-        <table border="1" cellpadding="5">
-            <thead>
+@if ($orcamentosAprovados->isEmpty())
+    <div class="alert alert-warning">
+        Nenhum orçamento aprovado no momento.
+    </div>
+@else
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle shadow-sm">
+            <thead class="table-success">
                 <tr>
                     <th>ID</th>
                     <th>Cliente</th>
@@ -28,6 +31,7 @@
                 @endforeach
             </tbody>
         </table>
-    @endif
+    </div>
+@endif
 
 @endsection
