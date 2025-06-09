@@ -29,7 +29,7 @@ class CompraController extends Controller
 
             foreach ($compra->itens as $item) {
                 $quantidadeTotal += $item->quantidade;
-                $precoTotal += $item->quantidade * $item->preco_unitario ?? 0;
+                $precoTotal += $item->quantidade * $item->preco_compra ?? 0;
             }
 
             $compra->quantidade_total = $quantidadeTotal;
@@ -112,6 +112,13 @@ class CompraController extends Controller
     public function show(string $id)
     {
         $compra = Compra::with(['itens.produto'])->findOrFail($id);
+        $precoTotal = 0;
+        foreach ($compra->itens as $item) {
+            $precoTotal += $item->quantidade * $item->preco_compra;
+        }
+
+        $compra->preco_total = $precoTotal;
+
         return view("compras.show", compact('compra'));
     }
 

@@ -18,8 +18,7 @@
             </h1>
 
             <div class="mb-3">
-              <strong>Data da Compra:</strong>
-              <p>{{ \Carbon\Carbon::parse($compra->data)->format('d/m/Y') }}</p>
+              <h5>Data da Compra: {{ \Carbon\Carbon::parse($compra->data)->format('d/m/Y') }}</h5>
             </div>
 
             <h5 class="mt-4">Produtos Comprados</h5>
@@ -38,15 +37,15 @@
                   <tr>
                     <td>{{ $item->produto->nome ?? 'Produto não encontrado' }}</td>
                     <td>{{ $item->quantidade }}</td>
-                    <td>R$ {{ number_format($item->preco_unitario, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($item->quantidade * $item->preco_unitario, 2, ',', '.') }}</td>
+                    <td>R$ {{ number_format($item->preco_compra, 2, ',', '.') }}</td>
+                    <td>R$ {{ number_format($item->quantidade * $item->preco_compra, 2, ',', '.') }}</td>
                   </tr>
                 @endforeach
               </tbody>
               <tfoot>
                 <tr class="table-secondary">
                   <th colspan="3" class="text-end">Preço Total:</th>
-                  <th>R$ {{ number_format($compra->total, 2, ',', '.') }}</th>
+                  <th>R$ {{ number_format($compra->preco_total, 2, ',', '.') }}</th>
                 </tr>
               </tfoot>
             </table>
