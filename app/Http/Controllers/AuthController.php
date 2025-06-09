@@ -12,18 +12,27 @@ class AuthController extends Controller
         return view('login');
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credenciais = $request->only('email', 'password');
 
-        if (Auth::attempt($credenciais)){
+        if (Auth::attempt($credenciais)) {
             $request->session()->regenerate();
             $user = Auth::user();
-            if ($user->role == "ADM")
-                return redirect()->intended('home-adm');
-            else if ($user->role == "ATD")
-                return redirect()->intended('home-atd');
-            else
-                return redirect()->intended('home-tec');
+
+            if ($user->role === "ADM") {
+                return redirect()->intended('/home-adm');
+            } elseif ($user->role === "ATD") {
+                return redirect()->intended('/home-atd');
+            } elseif ($user->role === "TEC") {
+                return redirect()->intended('/home-tec');
+            } else {
+                // Em caso de papel inesperado
+                /*Auth::logout();
+                return redirect('/login')->withErrors([
+                    'acesso' => 'Perfil de usuário não autorizado!'
+                ]);*/
+            }
         }
 
         return back()->withErrors([
@@ -36,5 +45,20 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+     public function adm()
+    {
+        return view('home-adm');
+    }
+
+    public function atd()
+    {
+        return view('home-atd');
+    }
+
+    public function tec()
+    {
+        return view('home-tec');
     }
 }

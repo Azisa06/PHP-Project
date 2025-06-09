@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id(); //PRIMARY KEY AUTO_INCREMENT
             $table->string('nome', 100); //VARCHAR(100)
-            $table->integer('cpf');
+            $table->bigInteger('cpf');
             $table->string('endereco', 100);
-            $table->integer('celular');
+            $table->bigInteger('celular');
             $table->string('email')->unique();
             $table->timestamps();
         });

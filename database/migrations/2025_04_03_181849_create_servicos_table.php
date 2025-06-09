@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('descricao')->nullable();
             $table->decimal('preco', 10, 2);
             $table->unsignedBigInteger('categoria_id');
-            $table->foreign('categoria_id')->references('id')->on('categoria_servicos')->onDelete('restrict');
+            $table->foreign('categoria_id')->references('id')->on('categoria_servicos')->onDelete('cascade');
             $table->timestamps();
         });
     }
