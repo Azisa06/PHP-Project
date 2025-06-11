@@ -138,6 +138,18 @@ class CompraController extends Controller
     public function update(Request $request, string $id)
     {
         try {
+            $produtos = $request->input('produtos', []);
+
+            foreach ($produtos as &$produto) {
+                if (isset($produto['preco_compra'])) {
+                    $produto['preco_compra'] = floatval(
+                        str_replace(',', '.', preg_replace('/[^\d,]/', '', $produto['preco_compra']))
+                    );
+                }
+            }
+
+            $request->merge(['produtos' => $produtos]);
+
             $request->validate([
                 'data' => 'required|date',
                 'produtos.*.produto_id' => 'required|exists:produtos,id',
@@ -146,11 +158,22 @@ class CompraController extends Controller
             ]);
 
             DB::transaction(function () use ($request, $id) {
-                $compra = Compra::findOrFail($id);
-                $compra->update([
-                    'data' => $request->data,
-                ]);
+                $compra = Compra::with('itens')->findOrFail($id);
+                $compra->update(['data' => $request->data]);
 
+                // SUBTRAI as quantidades antigas do estoque
+                foreach ($compra->itens as $itemAntigo) {
+                    $estoque = Estoque::where('produto_id', $itemAntigo->produto_id)->first();
+                    if ($estoque) {
+                        $estoque->quantidade -= $itemAntigo->quantidade;
+                        $estoque->save();
+                    }
+                }
+
+                // Deleta itens antigos
+                $compra->itens()->delete();
+
+                // Adiciona os novos itens
                 foreach ($request->produtos as $item) {
                     ItemCompra::create([
                         'compra_id' => $compra->id,
@@ -161,29 +184,19 @@ class CompraController extends Controller
 
                     $precoVenda = $item['preco_compra'] * 1.4;
 
-                    $estoque = Estoque::where('produto_id', $item['produto_id'])->first();
-
-                    if ($estoque) {
-                        $estoque->quantidade += $item['quantidade'];
-                        $estoque->preco_venda = $precoVenda;
-                        $estoque->data = $request->data;
-                        $estoque->save();
-                    } else {
-                        Estoque::create([
-                            'produto_id' => $item['produto_id'],
-                            'quantidade' => $item['quantidade'],
-                            'tipo' => 'entrada',
-                            'descricao' => 'Atualização de Compra ID ' . $compra->id,
-                            'preco_venda' => $precoVenda,
-                            'data' => $request->data,
-                        ]);
-                    }
+                    $estoque = Estoque::firstOrNew(['produto_id' => $item['produto_id']]);
+                    $estoque->quantidade += $item['quantidade'];
+                    $estoque->preco_venda = $precoVenda;
+                    $estoque->data = $request->data;
+                    $estoque->tipo = 'entrada';
+                    $estoque->save();
                 }
             });
 
             return redirect()->route('compras.index')
                 ->with('sucesso', 'Compra atualizada com sucesso!');
         } catch (Exception $e) {
+            dd($e->getMessage());
             Log::error("Erro ao atualizar a compra: " . $e->getMessage(), [
                 'stack' => $e->getTraceAsString(),
                 'compra_id' => $id,
@@ -193,6 +206,8 @@ class CompraController extends Controller
                 ->with('erro', 'Erro ao atualizar a compra!');
         }
     }
+
+
 
     /**
      * Remove the specified resource from storage.
