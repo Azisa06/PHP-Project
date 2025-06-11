@@ -26,17 +26,6 @@ class Produto extends Model
         return $this->hasMany(Compra::class);
     }
 
-    public function movimentacoes()
-    {
-        return $this->hasMany(Estoque::class);
-    }
-
-    // Estoque atual calculado
-    public function getEstoqueAtualAttribute()
-    {
-        return $this->movimentacoes()->sum('quantidade');
-    }
-
     public function estoques()
     {
         return $this->hasMany(Estoque::class);
@@ -45,5 +34,10 @@ class Produto extends Model
     public function ultimoEstoque()
     {
         return $this->hasOne(Estoque::class)->latestOfMany();
+    }
+
+    public function getEstoqueAtualAttribute()
+    {
+        return $this->estoques->sum('quantidade');
     }
 }
