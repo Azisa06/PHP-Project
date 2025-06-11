@@ -35,4 +35,9 @@ class Produto extends Model
     {
         return $this->hasOne(Estoque::class)->latestOfMany();
     }
+
+    public function getEstoqueAtualAttribute()
+    {
+        return $this->estoques->sum('quantidade');
+    }
 }
