@@ -1,36 +1,48 @@
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Relatórios</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  </head>
-  <body class="container mt-5">
+@extends('layout')
 
-    <div class="mb-4">
-      <h1 class="mb-4">Relatórios</h1>
-      <h2 class="h4 mb-3">Relatório de Estoque</h2>
+@section('principal')
+<div class="container py-4">
+  <h1 class="mb-4">Relatórios</h1>
+  <div class="row">
+    <!-- Relatório de Estoque -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow h-100">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+          <i class="bi bi-clipboard-data fs-1 mb-3 text-primary"></i>
+          <h5 class="card-title mb-2">Estoque</h5>
+          <p class="card-text text-center mb-4">Gere um PDF atualizado com o saldo atual, quantidades e preços de venda de estoque dos produtos</p>
+          <a href="{{ route('relatorios.estoque') }}" class="btn btn-primary mt-auto w-100" role="button">
+            <i class="bi bi-download"></i> Gerar PDF
+          </a>
+        </div>
+      </div>
     </div>
-
-    <div class="mb-0">
-      <a href="{{ route('relatorios.estoque') }}" class="btn btn-primary" role="button">
-        <i class="bi bi-download"></i> Gerar relatório (PDF)
-      </a>
+    <!-- Exemplo de outro relatório futuro
+    <div class="col-md-4 mb-4">
+      <div class="card shadow h-100">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+          <i class="bi bi-person-lines-fill fs-1 mb-3 text-success"></i>
+          <h5 class="card-title mb-2">Clientes</h5>
+          <p class="card-text text-center mb-4">Gere um relatório com informações dos clientes cadastrados</p>
+          <a href="#" class="btn btn-success disabled mt-auto w-100" role="button">
+            <i class="bi bi-download"></i> Em breve
+          </a>
+        </div>
+      </div>
     </div>
-
-    <div class="d-flex justify-content-end mt-3">
-      <a href="@if(Auth::user()->role == 'ADM') /home-adm
-                @elseif(Auth::user()->role == 'ATD') /home-atd
-                @elseif(Auth::user()->role == 'TEC') /home-tec
-                @else / @endif"
-        class="btn btn-success">
-        <i class="bi bi-arrow-left-circle"></i> Voltar
-      </a>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+     Exemplo de outro relatório futuro
+    <div class="col-md-4 mb-4">
+      <div class="card shadow h-100">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+          <i class="bi bi-file-earmark-bar-graph fs-1 mb-3 text-warning"></i>
+          <h5 class="card-title mb-2">Orçamentos</h5>
+          <p class="card-text text-center mb-4">Relatório de orçamentos realizados e seus status</p>
+          <a href="#" class="btn btn-warning disabled mt-auto w-100" role="button">
+            <i class="bi bi-download"></i> Em breve
+          </a>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+@endsection
