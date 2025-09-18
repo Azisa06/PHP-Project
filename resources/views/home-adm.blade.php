@@ -1,29 +1,57 @@
 @extends('layout')
 
 @section('principal')
-    <h2>Controle de Estoque de Produtos</h2>
+    <div class="row mt-4">
+        <div class="col-md-7">
+            <h2>Controle de Estoque de Produtos</h2>
+        </div>
+        <div class="col-md-5">
+            <h2>Controle de Orçamento</h2>
+        </div>
+    </div>
 
     @if(isset($produtosEstoqueBaixo) && $produtosEstoqueBaixo->count())
-        <div class="alert alert-warning mt-4">
-        <strong>Atenção!</strong>
-        <p>Os seguintes produtos estão com estoque baixo:</p>
-        <ul>
-            @foreach($produtosEstoqueBaixo as $produto)
-            <li>
-                {{ $produto->nome }} — Quantidade em estoque: {{ $produto->estoque_atual }}
-            </li>
-            @endforeach
-        </ul>
+        <div class="alert alert-warning mt-4 col-md-7">
+            <strong>Atenção!</strong>
+            <p>Os seguintes produtos estão com estoque baixo:</p>
+            <ul>
+                @foreach($produtosEstoqueBaixo as $produto)
+                <li>
+                    {{ $produto->nome }} — Quantidade em estoque: {{ $produto->estoque_atual }}
+                </li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
-    <canvas id="graficoEstoque" width="300" height="100"></canvas>
+    <div class="row mb-4">
+        <div class="col-md-7">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong>Gráfico de Estoque de Produtos</strong>
+                </div>
+                <div class="card-body">
+                    <canvas id="graficoEstoque" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong>Gráfico de Orçamentos</strong>
+                </div>
+                <div class="card-body">
+                    <canvas id="graficoOrcamentos" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
-        const ctx = document.getElementById('graficoEstoque').getContext('2d');
-        const chart = new Chart(ctx, {
+        // Gráfico de Estoque
+        const ctxEstoque = document.getElementById('graficoEstoque').getContext('2d');
+        const chartEstoque = new Chart(ctxEstoque, {
             type: 'bar',
             data: {
                 labels: @json($produtos->pluck('produto.nome')),
@@ -41,25 +69,19 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                        stepSize: 1,
-                        callback: function(value) {
-                            return parseInt(value);
+                            stepSize: 1,
+                            callback: function(value) {
+                                return parseInt(value);
+                            }
                         }
-                    }
                     }
                 }
             }
         });
-    </script>
 
-    <h2>Controle de orçamentos</h2>
-    <canvas id="graficoOrcamentos" width="300" height="300"></canvas>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const ctx = document.getElementById('graficoOrcamentos').getContext('2d');
-        const chart = new Chart(ctx, {
+        // Gráfico de Orçamentos
+        const ctxOrcamentos = document.getElementById('graficoOrcamentos').getContext('2d');
+        const chartOrcamentos = new Chart(ctxOrcamentos, {
             type: 'doughnut',
             data: {
                 labels: ['Abertos', 'Finalizados'],
@@ -78,7 +100,7 @@
                 }]
             },
             options: {
-                responsive: false,
+                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom'
@@ -86,6 +108,5 @@
                 }
             }
         });
-    });
     </script>
 @endsection
