@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\VendaController;
 use App\Http\Controllers\EstoqueController;
 use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\OrcamentoController;
@@ -10,13 +11,13 @@ use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\HomeAdmController; // Importar a nova AdmController
+use App\Http\Controllers\HomeAdmController;
 use App\Http\Controllers\HomeAtdController;
 use App\Http\Controllers\HomeTecController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Middleware\RoleAdmMiddleware;
-use App\Http\Middleware\RoleAtdMiddleware; // Presumindo que você terá este middleware
-use App\Http\Middleware\RoleTecMiddleware; // Presumindo que você terá este middleware
+use App\Http\Middleware\RoleAtdMiddleware;
+use App\Http\Middleware\RoleTecMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,6 +47,7 @@ Route::middleware("auth")->group(function () {
     Route::get('/servicos/create', [ServicoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('servicos.create');
     Route::get('/orcamentos/create', [OrcamentoController::class, 'create'])->middleware('accessAdmAtd.shared')->name('orcamentos.create');
     Route::get('/compras/create', [CompraController::class, 'create'])->middleware('accessAdmAtd.shared')->name('compras.create');
+    Route::get('/vendas/create', [VendaController::class, 'create'])->middleware('accessAdmAtd.shared')->name('vendas.create');
 
     //rotas para todos tipos de users
     Route::post("/logout", [AuthController::class, "logout"])->middleware('auth');
@@ -98,6 +100,15 @@ Route::middleware("auth")->group(function () {
         Route::get('/compras/{co}/edit', [CompraController::class, 'edit'])->name('compras.edit');
         Route::put('/compras/{co}', [CompraController::class, 'update'])->name('compras.update');
         Route::delete('/compras/{co}', [CompraController::class, 'destroy'])->name('compras.destroy');
+    });
+
+    Route::middleware(['accessAdmAtd.shared'])->group(function () {
+        Route::post('/vendas', [VendaController::class, 'store'])->name('vendas.store');
+        Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
+        Route::get('/vendas/{v}', [VendaController::class, 'show'])->name('vendas.show');
+        Route::get('/vendas/{v}/edit', [VendaController::class, 'edit'])->name('vendas.edit');
+        Route::put('/vendas/{v}', [VendaController::class, 'update'])->name('vendas.update');
+        Route::delete('/vendas/{v}', [VendaController::class, 'destroy'])->name('vendas.destroy');
     });
 
     Route::middleware(['accessAdmAtd.shared'])->group(function () {
