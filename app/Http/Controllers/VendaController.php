@@ -88,9 +88,16 @@ class VendaController extends Controller
 
                     $estoque = Estoque::where('produto_id', $produtoId)->first();
 
+                    $produto = Produto::find($produtoId); // Busca o objeto Produto
+                    $estoque = Estoque::where('produto_id', $produtoId)->first();
+
                     // Validação de Estoque Suficiente (Fundamental para Vendas)
                     if (!$estoque || $estoque->quantidade < $quantidadeVendida) {
-                        throw new Exception("Estoque insuficiente para o produto ID {$produtoId}. Disponível: " . ($estoque ? $estoque->quantidade : 0));
+                        $nomeProduto = $produto ? $produto->nome : 'Produto Desconhecido';
+                        $disponivel = $estoque ? $estoque->quantidade : 0;
+         
+                        // mensagem de erro
+                        throw new Exception("Não foi possível atualizar a quantidade para '{$nomeProduto}'. Estoque disponível: {$disponivel}. Você tentou vender: {$quantidadeVendida}.");
                     }
 
                     // Cria o ItemVenda
@@ -206,10 +213,16 @@ class VendaController extends Controller
 
                     $estoque = Estoque::where('produto_id', $produtoId)->first();
 
-                    // Validação de Estoque (após re-adicionar as quantidades antigas)
+                    $produto = Produto::find($produtoId); // Busca o objeto Produto
+                    $estoque = Estoque::where('produto_id', $produtoId)->first();
+
+                    // Validação de Estoque Suficiente (Fundamental para Vendas)
                     if (!$estoque || $estoque->quantidade < $quantidadeVendida) {
-                         // A quantidade disponível agora inclui o item que foi desfeito
-                         throw new Exception("Estoque insuficiente para o produto ID {$produtoId}. Disponível: " . ($estoque ? $estoque->quantidade : 0) . ". Necessário: {$quantidadeVendida}");
+                        $nomeProduto = $produto ? $produto->nome : 'Produto Desconhecido';
+                        $disponivel = $estoque ? $estoque->quantidade : 0;
+         
+                        // mensagem de erro
+                        throw new Exception("Não foi possível atualizar a quantidade para '{$nomeProduto}'. Estoque disponível: {$disponivel}. Você tentou vender: {$quantidadeVendida}.");
                     }
 
                     // Cria o novo ItemVenda

@@ -38,18 +38,18 @@
               </div>
 
               <div class="col-6 col-md-2">
-                <label class="form-label">Qtd</label>
-                <input type="number" name="produtos[0][quantidade]" class="form-control quantidade" min="1" placeholder="Qtd" required value="{{ old('produtos.0.quantidade') }}">
+                <label class="form-label">Quantidade</label>
+                <input type="number" name="produtos[0][quantidade]" class="form-control quantidade" min="1" required value="{{ old('produtos.0.quantidade') }}">
               </div>
 
               <div class="col-6 col-md-3">
-                <label class="form-label">Preço de Venda</label>
-                <input type="text" name="produtos[0][preco_venda]" class="form-control preco" placeholder="Preço de Venda" required value="{{ old('produtos.0.preco_venda') }}">
+                <label class="form-label">Preço Unitário</label>
+                <input type="text" name="produtos[0][preco_venda]" class="form-control preco" required value="{{ old('produtos.0.preco_venda') }}">
               </div>
 
               <div class="col-6 col-md-1">
                 <label class="form-label">Subtotal</label>
-                <input type="text" class="form-control subtotal text-end" placeholder="Subtotal" readonly>
+                <input type="text" class="form-control subtotal text-end" readonly>
               </div>
 
               <div class="col-6 col-md-1 d-flex align-items-center justify-content-center">

@@ -27,6 +27,7 @@
           @foreach ($venda->itens as $index => $item)
             @php 
               $produtoEstoque = $produtos->firstWhere('id', $item->produto_id);
+              $nomeProduto = $produtoEstoque->nome ?? 'Produto não encontrado';
               $estoqueAposReversao = ($produtoEstoque->quantidade_estoque ?? 0) + $item->quantidade; 
             @endphp
 
@@ -35,19 +36,9 @@
               <div class="row mb-2">
                 <div class="col-12 col-md-6">
                   <label for="produto_{{ $index }}" class="form-label">Nome</label>
-                  <select name="produtos[{{ $index }}][produto_id]" id="produto_{{ $index }}" class="form-select produto-select" required>
-                    <option value="">Selecione um produto</option>
-                    @foreach($produtos as $p)
-                      <option 
-                        value="{{ $p->id }}" 
-                        data-estoque="{{ $p->quantidade_estoque }}"
-                        data-preco-venda="{{ number_format($p->preco_venda, 2, ',', '.') }}"
-                        {{ $item->produto_id == $p->id ? 'selected' : '' }}
-                      >
-                        {{ $p->nome }} (Estoque: {{ $p->quantidade_estoque }})
-                      </option>
-                    @endforeach
-                  </select>
+                  <input type="text" class="form-control" value="{{ $nomeProduto }}" disabled>
+                  <input type="hidden" name="produtos[{{ $index }}][produto_id]" value="{{ $item->produto_id }}">
+                  <small class="text-info estoque-info">Estoque disponível: {{ $estoqueAposReversao }}</small>
                 </div>
 
                 <div class="col-6 col-md-3">
@@ -65,14 +56,7 @@
 
                 <div class="col-6 col-md-3">
                   <label for="preco_{{ $index }}" class="form-label">Preço Unitário</label>
-                  <input 
-                    type="text" 
-                    name="produtos[{{ $index }}][preco_venda]" 
-                    id="preco_{{ $index }}" 
-                    value="{{ old("produtos.$index.preco_venda", number_format($item->preco_venda, 2, ',', '.')) }}" 
-                    class="form-control preco" 
-                    required
-                  >
+                  <input type="text" name="produtos[{{ $index }}][preco_venda]" id="preco_{{ $index }}" value="{{ old("produtos.$index.preco_venda", number_format($item->preco_venda, 2, ',', '.')) }}" class="form-control preco" required>
                 </div>
               </div>
 
@@ -168,53 +152,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Recalcula total geral
     let totalGeral = 0;
-    document.querySelectorAll('.produto-item').forEach(i => {
-      const itemQtd = parseInt(i.querySelector('input[name*="[quantidade]"]')?.value) || 0;
-      const itemPreco = parseNumberBr(i.querySelector('input[name*="[preco_venda]"]')?.value || '0');
-      totalGeral += itemQtd * itemPreco;
-    });
+        document.querySelectorAll('.produto-item').forEach(i => {
+            const itemQtd = parseInt(i.querySelector('input[name*="[quantidade]"]')?.value) || 0;
+            // Usa parseNumberBr para converter o preço do formato BR (vírgula)
+            const itemPreco = parseNumberBr(i.querySelector('input[name*="[preco_venda]"]')?.value || '0'); 
+            totalGeral += itemQtd * itemPreco;
+        });
 
-    const totalInput = document.getElementById('preco_total');
-    if (totalInput) {
-      totalInput.value = formatarReal(totalGeral);
+        const totalInput = document.getElementById('preco_total');
+        if (totalInput) {
+            totalInput.value = formatarReal(totalGeral);
+        }
     }
-  }
 
-  // Inicializa listeners em cada item
-  document.querySelectorAll('.produto-item').forEach(container => {
-    const select = container.querySelector('.produto-select');
-    const qtdInput = container.querySelector('input[name*="[quantidade]"]');
-    const precoInput = container.querySelector('input[name*="[preco_venda]"]');
+    // Inicializa listeners em cada item
+    document.querySelectorAll('.produto-item').forEach(container => {
+        const qtdInput = container.querySelector('input[name*="[quantidade]"]');
+        const precoInput = container.querySelector('input[name*="[preco_venda]"]');
+        
+        // 1. Liga o listener à entrada da QUANTIDADE
+        qtdInput.addEventListener('input', () => atualizarTotais(container));
+        
+        // 2. LIGA O LISTENER À ENTRADA DO PREÇO (ISSO DEVE RESOLVER O PROBLEMA)
+        precoInput.addEventListener('input', () => atualizarTotais(container));
 
-    // Define data-original-qtd caso venha do backend (já setado no atributo), mas se trocar de produto,
-    // tenta localizar o item original correspondente para ajustar o originalQtd
-    select.addEventListener('change', function() {
-      const produtoId = this.value;
-      // tenta encontrar item original para este produto na venda original
-      const itemOriginal = itensOriginais.find(i => i.produto_id == produtoId) || {};
-      const originalQtd = itemOriginal.quantidade || 0;
-      qtdInput.setAttribute('data-original-qtd', originalQtd);
-
-      const produtoEmEstoque = produtosEstoque.find(p => p.id == produtoId);
-      const estoqueAtual = produtoEmEstoque ? produtoEmEstoque.quantidade_estoque : 0;
-
-      container.querySelector('.estoque-info').textContent = `Estoque disponível: ${estoqueAtual + originalQtd}`;
-      // Preenche preço do produto ao trocar a seleção (formato "0,00")
-      if (produtoEmEstoque) {
-        precoInput.value = (produtoEmEstoque.preco_venda).toFixed(2).replace('.', ',');
-      } else {
-        precoInput.value = '';
-      }
-
-      atualizarTotais(container);
+        // 3. Calcula inicialmente os totais
+        atualizarTotais(container);
     });
-
-    qtdInput.addEventListener('input', () => atualizarTotais(container));
-    precoInput.addEventListener('input', () => atualizarTotais(container));
-
-    // Calcula inicialmente os totais por item
-    atualizarTotais(container);
-  });
 });
 </script>
 @endsection
