@@ -1,0 +1,59 @@
+.text-estoque {
+  color: #6f42c1 !important; 
+}
+
+.btn-estoque {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+  color: #ffffff;
+}
+
+.btn-estoque:hover {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+}
+
+.text-vendas {
+  color: #20c997 !important; 
+}
+
+.btn-vendas {
+  background-color: #20c997;
+  border-color: #20c997;
+  color: #ffffff;
+}
+
+.btn-vendas:hover {
+  background-color: #20c997;
+  border-color: #20c997;
+}
+
+.text-consertos {
+  color: #fd7e14 !important; 
+}
+
+.btn-consertos {
+  background-color: #fd7e14;
+  border-color: #fd7e14;
+  color: #ffffff;
+}
+
+.btn-consertos:hover {
+  background-color: #fd7e14;
+  border-color: #fd7e14;
+}
+
+.text-financeiro {
+  color: #6c757d !important; 
+}
+
+.btn-financeiro {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #ffffff;
+}
+
+.btn-financeiro:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}

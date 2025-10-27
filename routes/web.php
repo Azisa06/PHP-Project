@@ -15,6 +15,9 @@ use App\Http\Controllers\HomeAdmController;
 use App\Http\Controllers\HomeAtdController;
 use App\Http\Controllers\HomeTecController;
 use App\Http\Controllers\RelatorioController;
+use App\Http\Controllers\ProtocoloController;
+use App\Http\Controllers\VendasConsertosRelatorioController;
+use App\Http\Controllers\RelatorioFinanceiroController;
 use App\Http\Middleware\RoleAdmMiddleware;
 use App\Http\Middleware\RoleAtdMiddleware;
 use App\Http\Middleware\RoleTecMiddleware;
@@ -119,11 +122,15 @@ Route::middleware("auth")->group(function () {
     Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::post('/orcamentos', [OrcamentoController::class, 'store'])->name('orcamentos.store');  
         Route::delete('/orcamentos/{o}', [OrcamentoController::class, 'destroy'])->name('orcamentos.destroy');
+        Route::get('/protocolos/{id}', [ProtocoloController::class, 'gerar'])->middleware('auth')->name('protocolos.gerar');
     });
 
     Route::middleware(['accessAdmAtd.shared'])->group(function () {
         Route::get('/relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
         Route::get('/relatorio_estoque', [RelatorioController::class, 'gerarRelatorioEstoque'])->name('relatorios.estoque');
+        Route::get('/relatorio_vendas', [VendasConsertosRelatorioController::class, 'gerarRelatorioVendas'])->name('relatorios.vendas');
+        Route::get('/relatorio_consertos', [VendasConsertosRelatorioController::class, 'gerarRelatorioConsertos'])->name('relatorios.consertos');
+        Route::get('/relatorio_financeiro', [RelatorioFinanceiroController::class, 'gerarRelatorio'])->name('relatorios.financeiro');
     });
 
     Route::middleware(['accessAdmAtd.shared'])->group(function () {
@@ -144,6 +151,6 @@ Route::middleware("auth")->group(function () {
     Route::middleware([RoleTecMiddleware::class])->group(function () {
         Route::get('/home-tec', [HomeTecController::class, 'index'])->name('home.tec');
     });
-
+//rota para atualizar status do orçamento (usada na home-atd)
     Route::patch('/orcamentos/{id}/status', [HomeAtdController::class, 'updateStatus'])->name('orcamentos.status');
 });
