@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -42,24 +43,38 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        try{
-            $user = Auth::user();
-            if (!Hash::check($request->input('confirm-password'), $user->password)){
-                return redirect('/editar')
-                    ->with('erro', 'A senha anterior não confere!');
-            }
+        $user = Auth::user();
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+            return redirect()->back()
+                ->with('erro', 'A senha atual não confere!');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'password' => 'nullable|min:8|confirmed', 
+        ]);
+
+        try {
             $user->name = $request->input('name');
             $user->email = $request->input('email');
-            $user->password = Hash::make($request->input('password'));
+
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->input('password'));
+            }
+
             $user->save();
-            Auth::logout();
-            return redirect('/login');
-        } catch(Exception $e){
-            Log::error("Erro ao aditar o usuário:" . $e->getMessage(), [
+
+            return redirect()->back()
+                   ->with('sucesso', 'Dados alterados com sucesso!');
+
+        } catch(Exception $e) {
+            Log::error("Erro ao editar o usuário:" . $e->getMessage(), [
                 'stack' => $e->getTraceAsString(),
                 'request' => $request->all()
             ]);
-            return redirect('/editar')->with('erro', 'Erro ao editar!');
-        } 
+            return redirect()->back()->with('erro', 'Erro ao editar!');
+        }
     }
 }

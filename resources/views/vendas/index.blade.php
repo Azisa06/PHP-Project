@@ -5,7 +5,7 @@
   <h1 class="mb-0">Vendas</h1>
 
   <div class="d-flex flex-column align-items-end">
-    <a class="btn btn-success mb-2" href="{{ route('vendas.create') }}">
+    <a class="btn btn-primary mb-2" href="{{ route('vendas.create') }}">
       <i class="bi bi-cash-stack"></i> Nova Venda
     </a>
   </div>

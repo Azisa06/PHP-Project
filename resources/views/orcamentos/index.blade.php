@@ -50,6 +50,9 @@
             <a href="/orcamentos/{{ $o->id }}" class="btn btn-info btn-sm px-3 text-white">
               <i class="bi bi-eye"></i> Consultar
             </a>
+            <a href="{{ route('protocolos.gerar', $o->id) }}" class="btn btn-secondary btn-sm px-3">
+              <i class="bi bi-download"></i> Imprimir
+            </a>
           </div>
         </td>
       </tr>

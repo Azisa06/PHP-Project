@@ -3,10 +3,30 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
-      <h2 class="text-center mb-4">Alterar Dados</h2>
+      <h2 class="text-center mb-4">
+        <i class="bi bi-pencil-square me-2"></i> Alterar Dados
+    </h2>
+
+      @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+      @endif
 
       @if (session('erro'))
-        <p class="text-danger">{{ session('erro') }}</p>
+          <div class="alert alert-danger">
+              {{ session('erro') }}
+          </div>
+      @endif
+
+      @if (session('sucesso'))
+          <div class="alert alert-success">
+              {{ session('sucesso') }}
+          </div>
       @endif
 
       {{-- ALTERAÇÕES AQUI: action e @method('PUT') --}}
