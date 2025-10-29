@@ -87,6 +87,7 @@
                 <li><a class="dropdown-item" href="/produtos">Produtos</a></li>
                 <li><a class="dropdown-item" href="/estoques">Estoque</a></li>
                 <li><a class="dropdown-item" href="/compras">Compras</a></li>
+                <li><a class="dropdown-item" href="/vendas">Vendas</a></li>
               </ul>
             </li>
             <!-- ATD: Serviços -->
