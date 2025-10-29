@@ -16,7 +16,7 @@ class StatusOrcamentoSeeder extends Seeder
         StatusOrcamento::create(['id' => '1', 'nome' => 'Aguardando Análise', 'descricao' => 'Produto entregue, aguardando testes.']);
         StatusOrcamento::create(['id' => '2', 'nome' => 'Orçamento Pronto', 'descricao' => 'Orçamento finalizado e disponível.']);
         StatusOrcamento::create(['id' => '3', 'nome' => 'Aguardando Aprovação do Cliente', 'descricao' => 'Esperando aprovação do cliente.']);
-        StatusOrcamento::create(['id' => '4', 'nome' => 'Aprovado – Aguardando Peças', 'descricao' => 'Orçamento aprovado, aguardando peças.']);
+        StatusOrcamento::create(['id' => '4', 'nome' => 'Aprovado / Aguardando Peças', 'descricao' => 'Orçamento aprovado / aguardando peças.']);
         StatusOrcamento::create(['id' => '5', 'nome' => 'Em Conserto', 'descricao' => 'Produto está sendo consertado.']);
         StatusOrcamento::create(['id' => '6', 'nome' => 'Conserto Finalizado', 'descricao' => 'Conserto finalizado, aguardando retirada.']);
         StatusOrcamento::create(['id' => '7', 'nome' => 'Orçamento Recusado', 'descricao' => 'Cliente recusou o orçamento.']);

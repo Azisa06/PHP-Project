@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sistema Shock</title>
+  <link rel="icon" href="{{ asset('img/logoshock.png') }}" type="image/png">
   <!-- Bootstrap 5 CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -87,6 +88,7 @@
                 <li><a class="dropdown-item" href="/produtos">Produtos</a></li>
                 <li><a class="dropdown-item" href="/estoques">Estoque</a></li>
                 <li><a class="dropdown-item" href="/compras">Compras</a></li>
+                <li><a class="dropdown-item" href="/vendas">Vendas</a></li>
               </ul>
             </li>
             <!-- ATD: Serviços -->
