@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\CategoriaFuncionario;
-use App\Models\MovimentacaoEstoque;
 use App\Models\Compra;
 use App\Models\Estoque;
 use App\Models\ItemCompra;
@@ -207,8 +205,6 @@ class CompraController extends Controller
         }
     }
 
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -229,5 +225,41 @@ class CompraController extends Controller
             return redirect()->route('compras.index')
                 ->with('erro', 'Erro ao excluir a compra!');
         }
+    }
+
+    /**
+     * Busca produtos para o Select2/Tom Select.
+     */
+    public function searchProdutos(Request $request)
+    {
+        $termo = $request->get('q');
+        
+        // Se não houver termo de busca, retornamos todos os produtos (até o limite)
+        // Isso permite que o dropdown mostre itens sem digitar se o limite for pequeno.
+        if (empty($termo)) {
+            $produtos = Produto::select('id', 'nome')
+                               ->limit(10) // Limite de 10 produtos para não travar
+                               ->get();
+        } else {
+             // Busca os produtos cujo nome contenha o termo
+            $produtos = Produto::where('nome', 'like', '%' . $termo . '%')
+                               ->select('id', 'nome') 
+                               ->limit(10) 
+                               ->get();
+        }
+
+
+        // Formata o resultado no formato esperado pela biblioteca (Tom Select)
+        $resultados = $produtos->map(function ($produto) {
+            return [
+                'id' => $produto->id,
+                'text' => $produto->nome, // 'text' é o que é exibido
+            ];
+        });
+        
+        // Adicionamos um log para debug da API
+        Log::info('Busca de Produtos API', ['termo' => $termo, 'resultados_count' => $resultados->count()]);
+
+        return response()->json(['results' => $resultados]);
     }
 }

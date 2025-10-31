@@ -288,4 +288,44 @@ class VendaController extends Controller
                 ->with('erro', 'Erro ao excluir a venda!');
         }
     }
+
+    /**
+ * Busca produtos para o Select2/Tom Select.
+ * Para Vendas, buscamos produtos que tenham estoque > 0.
+ */
+public function searchProdutos(Request $request)
+{
+    $termo = $request->get('q');
+    
+    $query = Produto::select('produtos.id', 'produtos.nome', 'estoques.preco_venda')
+        ->join('estoques', 'produtos.id', '=', 'estoques.produto_id')
+        ->where('estoques.quantidade', '>', 0)
+        ->limit(10);
+
+    // Se houver termo de busca, aplicamos o filtro pelo nome do produto
+    if (!empty($termo)) {
+        $query->where('produtos.nome', 'like', '%' . $termo . '%');
+    }
+
+    $produtos = $query->get();
+
+    // Formata o resultado no formato esperado pelo Tom Select, incluindo preco_venda
+    $resultados = $produtos->map(function ($produto) {
+        // Formatamos o preço para o padrão brasileiro (0,00)
+        $preco_venda_br = number_format($produto->preco_venda ?? 0, 2, ',', '.');
+        
+        return [
+            'id' => $produto->id,
+            // Exibimos o nome e a info de preço/estoque aqui
+            'text' => $produto->nome . ' (R$ ' . $preco_venda_br . ')', 
+            // O Tom Select pode armazenar dados adicionais na opção
+            'preco_venda' => $preco_venda_br,
+        ];
+    });
+    
+    // Adicionamos um log para debug da API
+    Log::info('Busca de Produtos Venda API', ['termo' => $termo, 'resultados_count' => $resultados->count()]);
+
+    return response()->json(['results' => $resultados]);
+}
 }

@@ -2,247 +2,306 @@
 
 @section('principal')
 <div class="row justify-content-center mt-5">
-  <div class="col-md-10">
-    <div class="card shadow">
-      <div class="card-body">
-        <h1 class="card-title text-center mb-4">
-          <i class="bi bi-cart-dash"></i> Registrar Venda
-        </h1>
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4">
+                    <i class="bi bi-cart-dash"></i> Registrar Venda
+                </h1>
 
-        <form method="POST" action="/vendas">
-          @csrf
+                <form method="POST" action="/vendas">
+                    @csrf
 
-          <div class="mb-3">
-            <label for="data" class="form-label">Data da Venda</label>
-            <input type="date" name="data" class="form-control" value="{{ old('data', date('Y-m-d')) }}" required>
-          </div>
+                    <div class="mb-3">
+                        <label for="data" class="form-label">Data da Venda</label>
+                        <input type="date" name="data" class="form-control" required>
+                    </div>
 
-          <h5 class="mt-4">Produtos para Venda</h5>
-          <div id="produtos-lista">
-            <div class="produto-item row g-2 mb-3 border p-2 rounded align-items-end">
-              <div class="col-12 col-md-5">
-                <label class="form-label">Produto</label>
-                <select name="produtos[0][produto_id]" class="form-select produto-select" required>
-                  <option value="">Selecione um produto</option>
-                  @foreach($produtos as $p)
-                    <option 
-                      value="{{ $p->id }}" 
-                      data-estoque="{{ $p->quantidade_estoque }}"
-                      data-preco-venda="{{ number_format($p->preco_venda, 2, ',', '.') }}"
-                      {{ old('produtos.0.produto_id') == $p->id ? 'selected' : '' }}
-                    >
-                      {{ $p->nome }} (Estoque: {{ $p->quantidade_estoque }})
-                    </option>
-                  @endforeach
-                </select>
-              </div>
+                    <h5 class="mt-4">Produtos para Venda</h5>
+                    <div id="produtos-lista">
+                        <div class="produto-item row g-2 mb-2 d-flex align-items-start"> 
+                            
+                            <div class="col-md-4">
+                                <label class="form-label visually-hidden">Produto</label>
+                                <select name="produtos[0][produto_id]" class="form-select produto-select select-busca" required> 
+                                    <option value="">Selecione ou busque um produto</option>
+                                </select>
+                            </div>
 
-              <div class="col-6 col-md-2">
-                <label class="form-label">Quantidade</label>
-                <input type="number" name="produtos[0][quantidade]" class="form-control quantidade" min="1" required value="{{ old('produtos.0.quantidade') }}">
-              </div>
+                            <div class="col-6 col-md-2">
+                                <input type="number" name="produtos[0][quantidade]" class="form-control quantidade" 
+                                       min="1" required value="{{ old('produtos.0.quantidade') }}" placeholder="Quantidade">
+                            </div>
 
-              <div class="col-6 col-md-3">
-                <label class="form-label">Preço Unitário</label>
-                <input type="text" name="produtos[0][preco_venda]" class="form-control preco" required value="{{ old('produtos.0.preco_venda') }}">
-              </div>
+                            <div class="col-6 col-md-3">
+                                <input type="text" name="produtos[0][preco_venda]" class="form-control preco" 
+                                       required value="{{ old('produtos.0.preco_venda') }}" placeholder="Preço Unitário">
+                            </div>
 
-              <div class="col-6 col-md-1">
-                <label class="form-label">Subtotal</label>
-                <input type="text" class="form-control subtotal text-end" readonly>
-              </div>
+                            <div class="col-6 col-md-1">
+                                <input type="text" class="form-control subtotal text-end" readonly placeholder="Subtotal">
+                            </div>
 
-              <div class="col-6 col-md-1 d-flex align-items-center justify-content-center">
-                <button type="button" class="btn btn-danger btn-remover" title="Remover item">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
+                            <div class="col-6 col-md-1 d-flex justify-content-center"> 
+                                <button type="button" class="btn btn-danger btn-remover" title="Remover item">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <button type="button" id="adicionar-produto" class="btn btn-secondary mt-2">
+                            <i class="bi bi-plus-circle"></i> Adicionar Produto
+                        </button>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <h5>Total da Venda: R$ <span id="total">0,00</span></h5>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bi bi-check-circle"></i> Cadastrar Venda
+                        </button>
+                        <a href="{{ route('vendas.index') }}" class="btn btn-danger">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+
+                    @if (session('sucesso'))
+                        <div class="alert alert-success mt-3">
+                            <p class="mensagem-sucesso mb-0">{{ session('sucesso') }}</p>
+                        </div>
+                    @endif
+
+                    @if (session('erro'))
+                        <div class="alert alert-danger mt-3">
+                            {{ session('erro') }}
+                        </div>
+                    @endif
+                </form>
             </div>
-          </div>
-
-          <div class="d-flex justify-content-start">
-            <button type="button" id="adicionar-produto" class="btn btn-secondary mt-2">
-              <i class="bi bi-plus-circle"></i> Adicionar Produto
-            </button>
-          </div>
-
-          <div class="mt-4 text-end">
-            <h5>Total da Venda: R$ <span id="total">0,00</span></h5>
-          </div>
-
-          <div class="d-flex justify-content-center mt-4">
-            <button type="submit" class="btn btn-primary me-2">
-              <i class="bi bi-check-circle"></i> Cadastrar Venda
-            </button>
-            <a href="{{ route('vendas.index') }}" class="btn btn-danger">
-              <i class="bi bi-x-circle"></i> Cancelar
-            </a>
-          </div>
-
-          @if (session('sucesso'))
-            <div class="alert alert-success mt-3">
-              <p class="mensagem-sucesso mb-0">{{ session('sucesso') }}</p>
-            </div>
-          @endif
-
-          @if (session('erro'))
-            <div class="alert alert-danger mt-3">
-              {{ session('erro') }}
-            </div>
-          @endif
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 </div>
 
+<style>
+/* Seu CSS original (Mantenha-o) */
+.input-grande {
+    padding: 0.5rem 0.75rem !important; 
+    height: auto !important; 
+}
+
+.ts-wrapper.form-select .ts-control {
+    border: none !important; 
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.ts-wrapper.form-select .ts-placeholder {
+    color: #6c757d; 
+    opacity: 0.65; 
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.ts-wrapper.form-select.focus .ts-control,
+.ts-wrapper.form-select .ts-control:focus,
+.ts-wrapper.form-select .ts-control:focus-within,
+.ts-wrapper.form-select .ts-control input:focus {
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+</style>
+
 <script>
-  let contador = 1;
+    let contador = 1;
 
-  function formatarReal(valor) {
-    return valor.toFixed(2).replace('.', ',');
-  }
+    function formatarReal(valor) {
+        return valor.toFixed(2).replace('.', ',');
+    }
 
-  function parseNumberBr(text) {
-    // Recebe "1.234,56" ou "1234,56" ou "R$ 1.234,56" e retorna Number
-    if (!text && text !== 0) return 0;
-    const s = String(text);
-    // remove tudo exceto dígitos e vírgula e ponto, depois remove pontos de milhar
-    const cleaned = s.replace(/[^\d.,-]/g, '').replace(/\.(?=\d{3})/g, '');
-    // agora substitui vírgula decimal por ponto
-    const normalized = cleaned.replace(',', '.');
-    const n = parseFloat(normalized);
-    return isFinite(n) ? n : 0;
-  }
+    function parseNumberBr(text) {
+        if (!text && text !== 0) return 0;
+        const s = String(text);
+        const cleaned = s.replace(/[^\d.,-]/g, '').replace(/\.(?=\d{3})/g, '');
+        const normalized = cleaned.replace(',', '.');
+        const n = parseFloat(normalized);
+        return isFinite(n) ? n : 0;
+    }
 
-  function atualizarTotais(item) {
-    const precoInput = item.querySelector('.preco');
-    const qtdInput = item.querySelector('.quantidade');
-    const subtotalInput = item.querySelector('.subtotal');
-    const select = item.querySelector('.produto-select');
-    const selectedOption = select ? select.options[select.selectedIndex] : null;
-    const estoqueInfo = item.querySelector('.estoque-info');
+    function atualizarTotais(item) {
+        let itemDiv = item || document.querySelector('.produto-item');
+        if (!itemDiv) return;
 
-    if (!subtotalInput) return; // protege caso o elemento esteja ausente
+        const precoInput = itemDiv.querySelector('.preco');
+        const qtdInput = itemDiv.querySelector('.quantidade');
+        const subtotalInput = itemDiv.querySelector('.subtotal');
 
-    // Parse seguro do preço e quantidade
-    const preco = parseNumberBr(precoInput?.value || '');
-    const qtd = parseInt(qtdInput?.value) || 0;
-    const estoque = parseInt(selectedOption?.getAttribute('data-estoque')) || 0;
+        const preco = parseNumberBr(precoInput?.value || '0');
+        const qtd = parseInt(qtdInput?.value) || 0;
+        const subtotal = preco * qtd;
 
-    const subtotal = preco * qtd;
-
-    // DEBUG (remova depois): ajuda a ver se valores chegam corretos
-    // console.log('atualizarTotais -> preco:', preco, 'qtd:', qtd, 'subtotal:', subtotal);
-
-    // Validação de estoque no Frontend (preventiva) — sem mensagem se estoqueInfo não existir
-    if (qtd > estoque && estoque > 0) {
-      qtdInput.classList.add('is-invalid');
-      if (estoqueInfo) {
-        estoqueInfo.textContent = `Atenção: A quantidade excede o estoque (${estoque}).`;
-        estoqueInfo.classList.remove('text-info');
-        estoqueInfo.classList.add('text-danger');
-      }
-    } else {
-      qtdInput.classList.remove('is-invalid');
-      if (estoqueInfo) {
-        if (selectedOption && selectedOption.value) {
-          estoqueInfo.textContent = `Em estoque: ${estoque}`;
-          estoqueInfo.classList.add('text-info');
-          estoqueInfo.classList.remove('text-danger');
-        } else {
-          estoqueInfo.textContent = '';
+        if (subtotalInput) {
+            subtotalInput.value = formatarReal(isNaN(subtotal) ? 0 : subtotal);
         }
-      }
+
+        let totalGeral = 0;
+        document.querySelectorAll('.produto-item').forEach(i => {
+            const subEl = i.querySelector('.subtotal');
+            const subtotalValue = parseNumberBr(subEl?.value || '0');
+            totalGeral += subtotalValue;
+        });
+        document.getElementById('total').innerText = formatarReal(totalGeral);
     }
 
-    // atualiza o campo subtotal (formato "0,00")
-    subtotalInput.value = formatarReal(isNaN(subtotal) ? 0 : subtotal);
-
-    // Calcula o total geral
-    let totalGeral = 0;
-    document.querySelectorAll('.produto-item').forEach(i => {
-      const subEl = i.querySelector('.subtotal');
-      const subtotalValue = parseNumberBr(subEl?.value || '0');
-      totalGeral += subtotalValue;
-    });
-    document.getElementById('total').innerText = formatarReal(totalGeral);
-  }
-
-  function inicializarListeners(item) {
-    const select = item.querySelector('.produto-select');
-    const qtdInput = item.querySelector('.quantidade');
-    const precoInput = item.querySelector('.preco');
-
-    if (select) {
-      select.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        const precoVenda = selectedOption ? selectedOption.getAttribute('data-preco-venda') || '' : '';
-        // Preenche o preço de venda (formato "1.234,56" vindo do atributo)
-        if (precoInput) precoInput.value = precoVenda;
-        atualizarTotais(item);
-      });
-    }
-
-    const btnRemover = item.querySelector('.btn-remover');
-    if (btnRemover) {
-      btnRemover.addEventListener('click', function() {
-        if (document.querySelectorAll('.produto-item').length > 1) {
-          item.remove();
-          // Recalcula o total geral após remover
-          const anyItem = document.querySelector('.produto-item');
-          if (anyItem) {
-            atualizarTotais(anyItem);
-          } else {
-            document.getElementById('total').innerText = '0,00';
-          }
+    // Função para inicializar o campo de busca (Tom Select)
+    function inicializarBusca(elemento) {
+        if (elemento.tomselect) {
+            elemento.tomselect.destroy();
         }
-      });
+
+        const ts = new TomSelect(elemento, {
+            valueField: 'id',
+            labelField: 'text',
+            searchField: 'text',
+            placeholder: 'Selecione ou busque um produto...',
+            preload: true, 
+            load: function(query, callback) {
+                if (!query.length) {
+                    query = '';
+                }
+                
+                const url = '{{ route("api.vendas.produtos.search") }}?q=' + encodeURIComponent(query);
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.results) {
+                            // CORREÇÃO: Mapeia o resultado para exibir o ESTOQUE no dropdown
+                            const formattedResults = data.results.map(item => {
+                                // Assume que a chave de estoque é 'quantidade_estoque' (como no seu código antigo)
+                                const estoque = item.quantidade_estoque || 0; 
+
+                                return {
+                                    id: item.id,
+                                    // Concatena o nome do produto (item.text) com o estoque
+                                    text: `${item.text} (Estoque: ${estoque})`, 
+                                    preco_venda: item.preco_venda, 
+                                    // Mantém outras chaves importantes
+                                };
+                            });
+                            callback(formattedResults);
+                        } else {
+                            callback();
+                        }
+                    })
+                    .catch((error) => {
+                    console.error("Erro na busca de produtos:", error);
+                    callback();
+                });
+            },
+            maxItems: 1, 
+            persist: false,
+        });
+
+        // Evento para preencher o preço de venda quando um item é selecionado
+        ts.on('change', function(value) {
+            const itemDiv = elemento.closest('.produto-item');
+            const precoInput = itemDiv.querySelector('.preco');
+            
+            const selectedData = ts.options[value];
+            
+            if (selectedData && precoInput) {
+                // Preenche o input de preço com o valor do item selecionado (automaticamente)
+                precoInput.value = formatarReal(selectedData.preco_venda || 0); 
+            } else if (precoInput) {
+                precoInput.value = '0,00';
+            }
+            
+            atualizarTotais(itemDiv);
+        });
     }
 
-    if (qtdInput) qtdInput.addEventListener('input', () => atualizarTotais(item));
-    if (precoInput) precoInput.addEventListener('input', () => atualizarTotais(item));
 
-    // Inicializa valores e totais para o item
-    atualizarTotais(item);
-  }
-
-  document.getElementById('adicionar-produto').addEventListener('click', function() {
-    const modelo = document.querySelector('.produto-item');
-    const novo = modelo.cloneNode(true);
-    const lista = document.getElementById('produtos-lista');
-
-    // Limpa valores e classes de feedback
-    novo.querySelectorAll('input').forEach(input => {
-      if (input.classList.contains('subtotal')) {
-        input.value = '0,00';
-      } else {
-        input.value = '';
-      }
-      input.classList.remove('is-invalid');
-    });
-    novo.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
-
-    const estoqueInfoEl = novo.querySelector('.estoque-info');
-    if (estoqueInfoEl) {
-      estoqueInfoEl.textContent = '';
-      estoqueInfoEl.classList.remove('text-danger', 'text-info');
-    }
-
-    // Ajusta os nomes para o novo índice
-    novo.querySelectorAll('select, input').forEach(el => {
-      const name = el.getAttribute('name');
-      if (name) {
-        el.setAttribute('name', name.replace(/\[\d+\]/, `[${contador}]`));
-      }
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.produto-select').forEach(inicializarBusca);
+        atualizarTotais();
     });
 
-    lista.appendChild(novo);
-    inicializarListeners(novo);
-    contador++;
-  });
 
-  // Inicializa listeners para os itens existentes (se houver old() data ou o item inicial)
-  document.querySelectorAll('.produto-item').forEach(inicializarListeners);
+    document.getElementById('adicionar-produto').addEventListener('click', function() {
+        const modelo = document.querySelector('.produto-item');
+        const novo = modelo.cloneNode(true);
+
+        // 2. Limpar inputs (quantidade, preço, subtotal)
+        novo.querySelector('.quantidade').value = '';
+        novo.querySelector('.preco').value = '';
+        novo.querySelector('.subtotal').value = '0,00';
+        
+        // 3. RECONSTRUÇÃO DO SELECT: Limpar e Recriar o elemento <select>
+        const selectContainer = novo.querySelector('.col-md-4');
+        selectContainer.innerHTML = ''; 
+
+        const newSelect = document.createElement('select');
+        newSelect.setAttribute('name', `produtos[${contador}][produto_id]`);
+        newSelect.setAttribute('class', 'form-select produto-select select-busca'); 
+        newSelect.setAttribute('required', 'required');
+        newSelect.innerHTML = '<option value="">Selecione ou busque um produto</option>';
+        
+        selectContainer.appendChild(newSelect);
+        // FIM DA RECONSTRUÇÃO
+
+        // 4. Renomeia os inputs para o novo índice
+        novo.querySelectorAll('input, select').forEach(el => {
+            const name = el.getAttribute('name');
+                if (name) {
+                    el.setAttribute('name', name.replace(/\[\d+\]/, `[${contador}]`));
+                }
+        });
+
+        document.getElementById('produtos-lista').appendChild(novo);
+
+        // 5. Inicializa o campo de busca com o novo elemento criado
+        inicializarBusca(newSelect);
+
+        contador++;
+        atualizarTotais(novo); 
+    });
+
+    // Listener de input genérico para Qtd e Preço
+    document.addEventListener('input', function(e) {
+        if (
+            e.target.classList.contains('quantidade') ||
+            e.target.classList.contains('preco')
+        ) {
+            const itemDiv = e.target.closest('.produto-item');
+            if (itemDiv) atualizarTotais(itemDiv);
+        }
+    });
+
+    // Listener de click para remover item
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.btn-remover')) {
+            var item = e.target.closest('.produto-item');
+            
+            if (document.querySelectorAll('.produto-item').length > 1) {
+                item.remove();
+                atualizarTotais(); 
+            } else {
+                // Limpar inputs e resetar o Tom Select
+                const selectEl = item.querySelector('.produto-select');
+                const ts = selectEl.tomselect;
+                if (ts) {
+                    ts.clear();
+                }
+                item.querySelector('.quantidade').value = '';
+                item.querySelector('.preco').value = '';
+                item.querySelector('.subtotal').value = '0,00';
+                atualizarTotais(); 
+            }
+        }
+    });
 </script>
 @endsection
