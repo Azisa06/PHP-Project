@@ -288,4 +288,49 @@ class VendaController extends Controller
                 ->with('erro', 'Erro ao excluir a venda!');
         }
     }
+
+    /**
+ * Busca produtos para o Select2/Tom Select.
+ * Para Vendas, buscamos produtos que tenham estoque > 0.
+ */
+    public function searchProdutos(Request $request)
+    {
+        $termo = $request->get('q');
+        
+        // Inicia a query com o relacionamento 'estoques' (para calcular o estoque)
+        $query = Produto::query();
+
+        if (!empty($termo)) {
+            $query->where('nome', 'like', '%' . $termo . '%');
+        }
+
+        $produtos = $query->select('id', 'nome')
+                        ->with('estoques') // Carrega o relacionamento para usar o accessor estoqueAtual
+                        ->limit(10) 
+                        ->get();
+
+        // Formata o resultado no formato esperado pelo Tom Select
+        $resultados = $produtos->map(function ($produto) {
+            
+            // 1. Estoque e Preço
+            $estoque_atual = $produto->estoques->sum('quantidade'); // Usa a soma direta
+            // Supondo que você armazena o último preco_venda no Estoque Model,
+            // ou você pode adicionar um accessor no Produto Model para isso.
+            // Vou usar um valor de exemplo ou 0 se não houver estoque.
+            $preco_venda = optional($produto->ultimoEstoque)->preco_venda ?? 0;
+            
+            // 2. Monta a string de exibição COM o estoque (o que o usuário vê)
+            $texto_exibicao = $produto->nome . " (Estoque: " . $estoque_atual . ")";
+            
+            return [
+                'id' => $produto->id,
+                'text' => $texto_exibicao, 
+                // 3. CAMPOS EXTRAS para o JavaScript
+                'estoque' => $estoque_atual, 
+                'preco_venda' => number_format($preco_venda, 2, '.', ''), // Preço formatado como float
+            ];
+        });
+
+        return response()->json(['results' => $resultados]);
+    }
 }
