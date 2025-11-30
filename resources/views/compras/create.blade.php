@@ -14,36 +14,42 @@
 
                     <div class="mb-3">
                         <label for="data" class="form-label">Data da Compra</label>
-                        <input type="date" name="data" class="form-control" required>
+                        <input type="date" name="data" class="form-control" required value="{{ old('data', date('Y-m-d')) }}">
                     </div>
 
-                    <div class="produto-item row g-2 mb-2 d-flex align-items-end"> 
-                        <h5 class="mt-4">Produtos</h5>
-                        <div id="produtos-lista">
-                            <div class="produto-item row g-2 mb-2">
-                                <div class="col-md-4">
-                                    <select name="produtos[0][produto_id]" class="form-select produto-select select-busca" required>
-                                        <option value="">Selecione ou busque um produto</option>
-                                        <!-- Itens serão carregados via AJAX pelo Tom Select -->
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <!-- Aplica a classe para igualar a altura do campo de busca -->
-                                    <input type="number" name="produtos[0][quantidade]" class="form-control quantidade input-grande" min="1" placeholder="Qtd" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <!-- Aplica a classe para igualar a altura do campo de busca -->
-                                    <input type="text" name="produtos[0][preco_compra]" class="form-control preco input-grande" placeholder="Preço de Compra" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <!-- Aplica a classe para igualar a altura do campo de busca -->
-                                    <input type="text" class="form-control subtotal input-grande" placeholder="Subtotal" readonly>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-danger btn-remover">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
+                    <h5 class="mt-4">Produtos</h5>
+                    
+                    {{-- O ID da lista é o container de todos os itens --}}
+                    <div id="produtos-lista">
+                        
+                        {{-- Estrutura modelo (Produto 1) --}}
+                        <div class="produto-item row g-2 mb-3 p-3 border rounded align-items-end">
+                            
+                            {{-- Índice do Produto --}}
+                            <h6 class="produto-indice mb-2">Produto 1</h6>
+
+                            <div class="col-md-4">
+                                <label for="produtos[0][produto_id]" class="form-label">Nome:</label>
+                                <select name="produtos[0][produto_id]" class="form-select produto-select select-busca" required>
+                                    <option value="">Selecione ou busque um produto</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="produtos[0][quantidade]" class="form-label">Quantidade:</label>
+                                <input type="number" name="produtos[0][quantidade]" class="form-control quantidade input-grande" min="1" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="produtos[0][preco_compra]" class="form-label">Preço de compra:</label>
+                                <input type="text" name="produtos[0][preco_compra]" class="form-control preco input-grande" placeholder="0,00" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="subtotal" class="form-label">Subtotal:</label>
+                                <input type="text" name="subtotal" class="form-control subtotal input-grande text-end" placeholder="0,00" readonly>
+                            </div>
+                            <div class="col-md-2 d-flex justify-content-center">
+                                <button type="button" class="btn btn-danger btn-remover">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -83,31 +89,22 @@
 </div>
 
 <style>
+/* Seus estilos CSS */
 .input-grande {
-    /* Padding observado no campo de busca para igualar a altura */
     padding: 0.5rem 0.75rem !important; 
     height: auto !important; 
 }
-
-/* 2. Tom Select: Estilos para garantir que a FONTE e a COR estejam corretas. */
 .ts-wrapper.form-select .ts-control {
-    /* Remove a borda padrão do Tom Select que estava causando a 'linha em volta' */
     border: none !important; 
-    
-    /* Define explicitamente a fonte/tamanho para ser consistente com o Bootstrap padrão (1rem) */
     font-size: 1rem;
     line-height: 1.5;
 }
-
-/* 3. Tom Select: Alinha a cor e o tamanho do placeholder */
 .ts-wrapper.form-select .ts-placeholder {
     color: #6c757d; 
     opacity: 0.65; 
     font-size: 1rem;
     line-height: 1.5;
 }
-
-/* 4. Tom Select: Remove o foco indesejado (a borda interna) */
 .ts-wrapper.form-select.focus .ts-control,
 .ts-wrapper.form-select .ts-control:focus,
 .ts-wrapper.form-select .ts-control:focus-within,
@@ -119,6 +116,30 @@
 
 <script>
     let contador = 1;
+
+    // Função para cálculo de totais (corrigida na iteração anterior)
+    function atualizarTotais() {
+        let total = 0;
+        
+        document.querySelectorAll('.produto-item').forEach(item => {
+            const precoInput = item.querySelector('.preco');
+            const qtdInput = item.querySelector('.quantidade');
+            const subtotalInput = item.querySelector('.subtotal');
+            
+            const precoStr = precoInput.value.replace(/[^\d,]/g, '').replace(',', '.'); 
+            const preco = parseFloat(precoStr) || 0; 
+            const qtd = parseInt(qtdInput.value) || 0;
+            
+            const subtotal = preco * qtd;
+
+            if (!isNaN(subtotal)) {
+                subtotalInput.value = subtotal.toFixed(2).replace('.', ','); 
+                total += subtotal;
+            }
+        });
+
+        document.getElementById('total').innerText = total.toFixed(2).replace('.', ',');
+    }
 
     // Função para inicializar o campo de busca (Tom Select)
     function inicializarBusca(elemento) {
@@ -133,7 +154,6 @@
                     query = '';
                 }
                 
-                // Chamada da rota Laravel correta
                 const url = '{{ route("api.produtos.search") }}?q=' + encodeURIComponent(query);
 
                 fetch(url)
@@ -155,98 +175,125 @@
         });
     }
 
+    // Função para re-indexar os nomes, títulos e re-inicializar o Tom Select em todos os itens
+    function reindexarProdutos() {
+        const lista = document.getElementById('produtos-lista');
+        let index = 1; // Começa a contagem visual em 1
+
+        lista.querySelectorAll('.produto-item').forEach(item => {
+            // 1. Atualiza o título e os names dos inputs/selects
+            const indiceElement = item.querySelector('.produto-indice');
+            if (indiceElement) {
+                indiceElement.textContent = `Produto ${index}`;
+            }
+            
+            item.querySelectorAll('input, select').forEach(el => {
+                const name = el.getAttribute('name');
+                if (name) {
+                    // Usa o índice de array (index - 1)
+                    el.setAttribute('name', name.replace(/\[\d+\]/, `[${index - 1}]`)); 
+                }
+            });
+            
+            // 2. AJUSTE CRÍTICO: Re-inicialização do Tom Select
+            const select = item.querySelector('.produto-select');
+            
+            // Destrói a instância Tom Select existente
+            if (select && select.tomselect) {
+                 select.tomselect.destroy();
+            }
+            
+            // Re-inicializa o Tom Select no elemento
+            inicializarBusca(select);
+            
+            index++;
+        });
+        
+        // Atualiza o contador para o próximo item
+        contador = index; 
+        atualizarTotais(); 
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Inicializa o primeiro campo de busca ao carregar a página
         document.querySelectorAll('.produto-select').forEach(inicializarBusca);
         atualizarTotais();
+        // Garante que o contador inicial está correto
+        contador = document.querySelectorAll('.produto-item').length + 1;
     });
 
 
-    function atualizarTotais() {
-        let total = 0;
-
-        document.querySelectorAll('.produto-item').forEach(item => {
-            const precoInput = item.querySelector('.preco');
-            const qtdInput = item.querySelector('.quantidade');
-            const subtotalInput = item.querySelector('.subtotal');
-
-            const precoStr = precoInput.value.replace(/[^\d,]/g, '').replace(',', '.');
-            const preco = parseFloat(precoStr) || 0; 
-            const qtd = parseInt(qtdInput.value) || 0;
-            const subtotal = preco * qtd;
-
-            if (!isNaN(subtotal)) {
-                subtotalInput.value = subtotal.toFixed(2).replace('.', ',');
-                total += subtotal;
-            }
-        });
-
-        document.getElementById('total').innerText = total.toFixed(2).replace('.', ',');
-    }
-
+    // Listener para adicionar produto
     document.getElementById('adicionar-produto').addEventListener('click', function() {
         const modelo = document.querySelector('.produto-item');
         
-        // 1. Clonar o elemento pai
+        // 1. Clonar o elemento modelo
         const novo = modelo.cloneNode(true);
-
-        // 2. Limpar inputs (quantidade, preço, subtotal)
+        const lista = document.getElementById('produtos-lista');
+        
+        // 2. Limpar inputs
         novo.querySelector('.quantidade').value = '';
         novo.querySelector('.preco').value = '';
-        novo.querySelector('.subtotal').value = '';
+        novo.querySelector('.subtotal').value = '0,00';
         
-        // 3. RECONSTRUÇÃO DO SELECT: Limpar e Recriar o elemento <select>
+        // 3. LIMPEZA CRÍTICA E RECONSTRUÇÃO DO SELECT
         const selectContainer = novo.querySelector('.col-md-4');
+
+        // Destrói qualquer instância Tom Select ativa no clone (previne erros)
+        const selectParaRemover = selectContainer.querySelector('.produto-select');
+        if (selectParaRemover && selectParaRemover.tomselect) {
+            selectParaRemover.tomselect.destroy();
+        }
+
+        // Remove todo o conteúdo, incluindo o wrapper do Tom Select
         selectContainer.innerHTML = ''; 
 
+        // 4. Reconstruir o elemento <select> puro
         const newSelect = document.createElement('select');
         newSelect.setAttribute('name', `produtos[${contador}][produto_id]`);
         newSelect.setAttribute('class', 'form-select produto-select select-busca'); 
         newSelect.setAttribute('required', 'required');
-        newSelect.innerHTML = '<option value="">Selecione/Busque um produto</option>';
-        
+        newSelect.innerHTML = '<option value="">Selecione ou busque um produto</option>';
         selectContainer.appendChild(newSelect);
-        // FIM DA RECONSTRUÇÃO
 
-        // 4. Renomeia os inputs para o novo índice
-        novo.querySelectorAll('input, select').forEach(el => {
-            const name = el.getAttribute('name');
-            if (name) {
-                el.setAttribute('name', name.replace(/\[\d+\]/, `[${contador}]`));
-            }
-            // Garante que os inputs clonados tenham a classe de tamanho
-            if (el.tagName === 'INPUT' && !el.classList.contains('input-grande')) {
-                el.classList.add('input-grande');
-            }
-        });
+        // 5. Adicionar o novo item à lista
+        lista.appendChild(novo);
 
-        document.getElementById('produtos-lista').appendChild(novo);
-
-        // 5. Inicializa o campo de busca com o novo elemento criado
-        inicializarBusca(newSelect);
-
-        contador++;
-        atualizarTotais();
+        // 6. Re-indexa a lista inteira, o que irá inicializar o Tom Select no novo item.
+        reindexarProdutos(); 
     });
 
+    // Listeners de cálculo de totais
     document.addEventListener('input', function(e) {
         if (
             e.target.classList.contains('quantidade') ||
             e.target.classList.contains('preco')
         ) {
-            atualizarTotais();
+            atualizarTotais(); 
         }
     });
 
+    // Listener para remover produto
     document.addEventListener('click', function(e) {
         if (e.target.closest('.btn-remover')) {
-            var item = e.target.closest('.produto-item') || e.target.closest('.btn-remover').closest('.produto-item');
-           
+            var item = e.target.closest('.produto-item');
+            
             if (document.querySelectorAll('.produto-item').length > 1) {
+                
+                // 1. Destrói a instância do Tom Select do item que será removido
+                const selectEl = item.querySelector('.produto-select');
+                if (selectEl && selectEl.tomselect) {
+                    selectEl.tomselect.destroy();
+                }
+                
+                // 2. Remove o item
                 item.remove();
-                atualizarTotais();
+                
+                // 3. Reindexa os produtos restantes
+                reindexarProdutos(); 
+                
             } else {
-                console.warn("É necessário ter pelo menos um produto na compra.");
+                alert("É necessário ter pelo menos um produto na compra.");
             }
         }
     });
