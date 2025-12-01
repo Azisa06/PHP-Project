@@ -14,7 +14,7 @@ class Compra extends Model
     public function getTotalAttribute()
     {
         return $this->itens->sum(function ($item) {
-            return $item->quantidade * $item->preco_unitario;
+            return $item->quantidade * $item->preco_compra;
         });
     }
 

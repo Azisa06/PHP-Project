@@ -224,7 +224,7 @@
                 <tr>
                     <td>{{ $compra->id }}</td>
                     <td>{{ \Carbon\Carbon::parse($compra->data_compra)->format('d/m/Y') }}</td>
-                    <td class="text-right">R$ {{ number_format($compra->preco_total, 2, ',', '.') }}</td>
+                    <td class="text-right">R$ {{ number_format($compra->total, 2, ',', '.') }}</td>
                 </tr>
                 @endforeach
             </tbody>
