@@ -23,7 +23,7 @@ class ItemCompra extends Model
 
     public function getSubtotalAttribute()
     {
-        return $this->quantidade * $this->preco_unitario;
+        return $this->quantidade * $this->preco_compra;
     }
 
 }

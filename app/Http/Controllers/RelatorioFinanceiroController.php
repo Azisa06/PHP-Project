@@ -26,7 +26,7 @@ class RelatorioFinanceiroController extends Controller
         //Queries Base
         $vendasQuery = Venda::query();
         $consertosQuery = Orcamento::where('status_id', $statusFinalizadoId);
-        $comprasQuery = Compra::query();
+        $comprasQuery = Compra::with('itens');
 
         //Filtro de Período
         if ($periodo === 'dia') {
@@ -69,7 +69,7 @@ class RelatorioFinanceiroController extends Controller
         $totalReceitasConsertos = $consertos->sum('preco');
         $totalReceitas = $totalReceitasVendas + $totalReceitasConsertos;
 
-        $totalDespesasCompras = $compras->sum('preco_total');
+        $totalDespesasCompras = $compras->sum('total');
         // para futuras despesas, adiciona-las nesse campo
         $totalDespesas = $totalDespesasCompras; 
 
